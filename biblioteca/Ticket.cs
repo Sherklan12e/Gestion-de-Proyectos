@@ -2,7 +2,7 @@ namespace biblioteca;
 
 public class Ticket{
     public int Id { get; set; }
-    public Usuario idUsuario { get; set; }
+    public Usuario usuario { get; set; }
     public string Nombre { get; set; }
     public string Descripcion { get; set; }
     public string Estado { get; set; } = "Abierto";

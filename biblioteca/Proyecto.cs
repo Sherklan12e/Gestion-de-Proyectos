@@ -7,7 +7,7 @@ public class Proyecto
     public string Descripcion { get; set; }
 
 
-    public List<Proyecto> Usuarios { get; set; } = new List<Proyecto>();
+    public List<Usuario> Usuarios { get; set; } = new List<Usuario>();
 
     public List<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
