@@ -1,24 +1,55 @@
 ﻿namespace Consola;
+
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 public class Blog
 {
-    public int Id {get;set;}
-    public string Name {get;set;}
-    public string Url {get;set;}
+ 
+    public int BlogId { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
 
-    public List<Blog> ObternerTodo(){
+    public List<Blog> GetAll()
+    {
         List<Blog> blogs = new List<Blog>();
-        using (var db = new BlogDbContext()){
-            try{
-                blogs = db.Blogs.ToList();
+
+        using (var dbContext = new BloggingContext())
+        {
+            try
+            {
+                blogs = dbContext.Blogs.ToList(); 
             }
-            catch(Exception ex){
+            catch (System.Exception ex)
+            {
                 Console.WriteLine($"Error while fetching blogs: {ex.Message}");
+                
             }
         }
+
         return blogs;
     }
-    public void Add
+
+    public void Add(string name, string url)
+    {
+        using (var dbContext = new BloggingContext())
+        {
+            try
+            {
+                var newBlog = new Blog
+                {
+                    Name = name,
+                    Url = url
+                };
+
+                dbContext.Blogs.Add(newBlog);
+                dbContext.SaveChanges();
+                Console.WriteLine("Blog added!");
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine($"An error occurred while adding a blog site: {ex.Message}");
+            }
+        }
+    }
 }
