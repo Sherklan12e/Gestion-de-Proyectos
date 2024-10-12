@@ -76,10 +76,7 @@
       },
       "biblioteca/1.0.0": {
         "runtime": {
-          "biblioteca.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "biblioteca.dll": {}
         }
       }
     }

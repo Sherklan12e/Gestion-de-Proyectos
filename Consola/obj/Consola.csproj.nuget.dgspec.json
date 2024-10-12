@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Tests\\Tests.csproj": {}
+    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Consola\\Consola.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Tests\\Tests.csproj": {
+    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Consola\\Consola.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Tests\\Tests.csproj",
-        "projectName": "Tests",
-        "projectPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Tests\\Tests.csproj",
+        "projectUniqueName": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Consola\\Consola.csproj",
+        "projectName": "Consola",
+        "projectPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Consola\\Consola.csproj",
         "packagesPath": "C:\\Users\\dev\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Tests\\obj\\",
+        "outputPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Consola\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dev\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,21 +43,13 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.NET.Test.Sdk": {
+            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[17.8.0, )"
+              "version": "[8.0.10, )"
             },
-            "coverlet.collector": {
+            "Microsoft.EntityFrameworkcore.Design": {
               "target": "Package",
-              "version": "[6.0.0, )"
-            },
-            "xunit": {
-              "target": "Package",
-              "version": "[2.5.3, )"
-            },
-            "xunit.runner.visualstudio": {
-              "target": "Package",
-              "version": "[2.5.3, )"
+              "version": "[8.0.10, )"
             }
           },
           "imports": [
