@@ -1,12 +1,6 @@
 namespace biblioteca;
 
-public enum Tickets
-{
-    Abierto,
-    EnProceso,
-    Testing,
-    Finalizado
-}
+
 
 public class Ticket
 {
@@ -14,57 +8,34 @@ public class Ticket
     public Usuario usuario { get; set; }
     public string Nombre { get; set; }
     public string Descripcion { get; set; }
-    public Tickets Estado { get; set; } = Tickets.Abierto;
+     public string Estado { get; set; } = "Abierto";
     public DateTime FechaInicio { get; set; }
     public DateTime? FechaFini { get; set; }
     public List<Comentario> Actividad { get; set; } = new List<Comentario>();
 
 
-    public void Iniciarproceso( )
+    public void CambiarEstado(string nuevoEstado)
     {
-        if (Estado == Tickets.Abierto)
+        if (!string.IsNullOrEmpty(nuevoEstado))
         {
-            Estado = Tickets.EnProceso;
+            Estado = nuevoEstado;
         }
         else
         {
-            throw new Exception("El ticket no estaba abierto");
-        }
-    }
-
-    public void IniciarTesting()
-    {
-        if (Estado == Tickets.Abierto)
-        {
-            Estado = Tickets.EnProceso;
-        }
-        else
-        {
-            throw new Exception("El ticket no estaba abierto");
-        }
-    }
-    public void TerminarTesting()
-    {
-        if (Estado == Tickets.Abierto)
-        {
-            Estado = Tickets.EnProceso;
-        }
-        else
-        {
-            throw new Exception("El ticket no estaba abierto");
+            throw new Exception("El estado no puede ser vacío");
         }
     }
     public void ModificarInformacion(string? nombre = null, string? descripcion = null, Usuario? usuarioAsignado = null)
-        {
-            if (nombre != null)
-                Nombre = nombre;
+    {
+        if (nombre != null)
+            Nombre = nombre;
 
-            if (descripcion != null)
-                Descripcion = descripcion;
+        if (descripcion != null)
+            Descripcion = descripcion;
 
-            if (usuarioAsignado != null)
-                usuario = usuarioAsignado;
-        }
+        if (usuarioAsignado != null)
+            usuario = usuarioAsignado;
+    }
 
     public void BorrarTicket()
     {
@@ -73,11 +44,12 @@ public class Ticket
 
     public void AgregarComentario(Usuario unnusuario, string contenido, Ticket unticket)
     {
-        Actividad.Add(new Comentario(){
-            ticket =  unticket,
+        Actividad.Add(new Comentario()
+        {
+            ticket = unticket,
             usuario = unnusuario,
             contenido = contenido,
-            Fecha =  DateTime.Now
+            Fecha = DateTime.Now
         });
     }
 
