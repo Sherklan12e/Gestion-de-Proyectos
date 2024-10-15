@@ -1,59 +1,49 @@
-using biblioteca;
-using Microsoft.AspNetCore.Http.HttpResults;
-
+using biblioteca.Dominio;
+using Api.Persistencia;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using MySqlX.XDevAPI.Common;
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-       options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection")
-    ));
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-   // Configurar el contexto de la base de datos
+
+var connectionString = builder.Configuration.GetConnectionString("gestiontarea_db");
+builder.Services.AddDbContext<GestionTareasDbContext>(option => option.UseMySql(connectionString, new MySqlServerVersion("8.0.39")));
+var options = new DbContextOptionsBuilder<GestionTareasDbContext>();
+options.UseMySql(connectionString, new MySqlServerVersion("8.0.39"));
+var context = new GestionTareasDbContext(options.Options);
+
+context.Database.EnsureCreated();
+
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(options =>{
+        options.RouteTemplate = "openapi/{documentName}.json";
+    });
+    app.MapScalarApiReference();
 }
+
 
 app.UseHttpsRedirection();
 
-List<Usuario> usuario1 = [];
 
-app.MapGet("/prueba", () =>{
-    return Results.Ok(usuario1);
-});
-app.MapPost("/subir", (Usuario usuario2) =>{
-    usuario1.Add(usuario2);
-    return  Results.Ok(usuario2);
+app.MapGet("/usuarios", (GestionTareasDbContext context) => {
+    var usuarios = context.Usuarios.ToList();
+    return Results.Ok(usuarios);
 });
 
-app.MapGet("/usuarios", async (ApplicationDbContext db) =>
-{
-       return await db.Usuarios.ToListAsync();
+app.MapPost("/crear_user", (GestionTareasDbContext context, Usuario usuario) => {
+    context.Usuarios.Add(usuario);
+    var usuarios = context.Usuarios.ToList();
+    return Results.Ok(usuarios);
 });
-
-app.MapPost("/usuarios", async (Usuario usuario, ApplicationDbContext db) =>
-{
-    db.Usuarios.Add(usuario);
-    await db.SaveChangesAsync();
-    return Results.Created($"/usuarios/{usuario.Id}", usuario);
-});
-
-app.MapDelete("/usuarios/{id}", async (int id, ApplicationDbContext db) =>
-{
-    var usuario = await db.Usuarios.FindAsync(id);
-    if (usuario is null) return Results.NotFound();
-
-    db.Usuarios.Remove(usuario);
-    await db.SaveChangesAsync();
-    return Results.NoContent();
-});
-
 
 app.Run();
 
