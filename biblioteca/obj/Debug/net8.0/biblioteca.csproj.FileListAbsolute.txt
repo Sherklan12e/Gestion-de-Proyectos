@@ -22,3 +22,4 @@ C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\bi
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\refint\biblioteca.dll
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.pdb
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\ref\biblioteca.dll
+C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.csproj.AssemblyReference.cache

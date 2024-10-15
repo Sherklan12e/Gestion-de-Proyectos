@@ -1,6 +1,0 @@
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.csproj.AssemblyReference.cache
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.AssemblyInfoInputs.cache
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.AssemblyInfo.cs
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.csproj.CoreCompileInputs.cache
-C:\Users\dev\Documents\repos\Gestion-de-Proyectos\Consola\obj\Debug\net8.0\Consola.sourcelink.json
