@@ -7,11 +7,11 @@ namespace biblioteca.Dominio;
 public class Comentario: Auditoria
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     [ForeignKey("Ticket")]
-    public required int Ticket { get; set; }
+    public Guid Ticket { get; set; }
     [ForeignKey("Usuario")]
-    public required int Usuario  {get; set; }
+    public Guid Usuario  {get; set; }
     [Required]
     [StringLength(50)]
     public required string Contenido {get; set; }

@@ -7,7 +7,7 @@ namespace biblioteca.Dominio
 {
     public class Auditoria
     {
-        public required string CreacionUsuario {get;set;}
-        public required DateTime FechaCreacion {get;set;}
+        public required string CreacionUsuario {get;set;} = string.Empty ;
+        public required DateTime FechaCreacion {get;set;}=DateTime.Now;
     }
 }

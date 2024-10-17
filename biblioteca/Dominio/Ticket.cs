@@ -8,9 +8,9 @@ namespace biblioteca.Dominio;
 public class Ticket
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }= Guid.NewGuid();
     [ForeignKey("Usuario")]
-    public required int Usuario  { get; set; }
+    public Guid  Usuario  { get; set; }
     public required string Nombre { get; set; }
     [Required]
     [StringLength(50)]

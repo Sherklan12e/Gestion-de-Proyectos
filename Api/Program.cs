@@ -2,7 +2,12 @@ using biblioteca.Dominio;
 using Api.Persistencia;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using MySqlX.XDevAPI.Common;
+
+using Api.Funcionalidades.Usuarios;
+using Api.Funcionalidades.Proyectos;
+using Api.Funcionalidades.Tickets;
+using Api.Funcionalidades.Comentarios;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -34,16 +39,17 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/usuarios", (GestionTareasDbContext context) => {
-    var usuarios = context.Usuarios.ToList();
-    return Results.Ok(usuarios);
-});
+var apiGroup = app.MapGroup("/api");
 
-app.MapPost("/crear_user", (GestionTareasDbContext context, Usuario usuario) => {
-    context.Usuarios.Add(usuario);
-    var usuarios = context.Usuarios.ToList();
-    return Results.Ok(usuarios);
-});
+// Map all endpoints
+apiGroup.MapUsuarioEndpoints();
+apiGroup.MapProyectoEndpoints();
+apiGroup.MapTicketEndpoints();
+apiGroup.MapComentarioEndpoints();
+
+builder.Services.AddScoped<IComentarioService, IComentarioService>();
+builder.Services.AddScoped<IProyectoService, IProyectoService>();
+builder.Services.AddScoped<ITicketService, ITicketService>();
+builder.Services.AddScoped<IUsuarioService, IUsuarioService>();
 
 app.Run();
-

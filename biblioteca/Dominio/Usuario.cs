@@ -7,7 +7,7 @@ namespace biblioteca.Dominio;
 public class Usuario : Auditoria
 {
     [Key]
-    public int Id { get; set;}
+    public Guid Id { get; set;} = Guid.NewGuid();
     [Required]
     [StringLength(24)]
     public required string Nombre {get;set;}
