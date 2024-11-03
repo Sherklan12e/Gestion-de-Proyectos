@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Persistencia.Migraciones
 {
     [DbContext(typeof(GestionTareasDbContext))]
-    [Migration("20241015140124_InitialMigration2")]
-    partial class InitialMigration2
+    [Migration("20241103143114_MigracionPrue")]
+    partial class MigracionPrue
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,11 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("ProyectoUsuario", b =>
                 {
-                    b.Property<int>("ProyectoAsignadosId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProyectoAsignadosId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int>("UsuariosId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UsuariosId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("ProyectoAsignadosId", "UsuariosId");
 
@@ -42,11 +42,9 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("biblioteca.Dominio.Comentario", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Contenido")
                         .IsRequired()
@@ -65,17 +63,17 @@ namespace Api.Persistencia.Migraciones
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("Ticket")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Ticket")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int?>("TicketId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("TicketId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int>("Usuario")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Usuario")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int?>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("UsuarioId")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -88,11 +86,9 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("biblioteca.Dominio.Proyecto", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CreacionUsuario")
                         .IsRequired()
@@ -118,11 +114,9 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("biblioteca.Dominio.Ticket", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -148,11 +142,11 @@ namespace Api.Persistencia.Migraciones
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ProyectoId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("ProyectoId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int>("Usuario")
-                        .HasColumnType("int");
+                    b.Property<Guid>("Usuario")
+                        .HasColumnType("char(36)");
 
                     b.HasKey("Id");
 
@@ -163,11 +157,9 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("biblioteca.Dominio.Usuario", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CreacionUsuario")
                         .IsRequired()

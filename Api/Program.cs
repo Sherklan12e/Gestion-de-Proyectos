@@ -17,6 +17,12 @@ var connectionString = builder.Configuration.GetConnectionString("gestiontarea_d
 builder.Services.AddDbContext<GestionTareasDbContext>(option => option.UseMySql(connectionString, new MySqlServerVersion("8.0.39")));
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+var options = new DbContextOptionsBuilder<GestionTareasDbContext>();
+options.UseMySql(connectionString, new MySqlServerVersion("8.0.39"));
+var context = new GestionTareasDbContext(options.Options);
+context.Database.Migrate();
+
+// builder.Services.AddServiceManager();
 
 var app = builder.Build();
 
@@ -32,8 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.MapGroup("/api")
-    .MapUsuarioEndpoints();
-
+    .MapUsuarioEndpoints()
+    .WithTags("Usuario");
 // Map all endpoints
 
 // apiGroup.MapProyectoEndpoints();
