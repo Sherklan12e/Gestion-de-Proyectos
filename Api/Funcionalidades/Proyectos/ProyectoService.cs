@@ -1,88 +1,115 @@
-using Microsoft.EntityFrameworkCore;
+// using Api.Persistencia;
+// using Api.Funcionalidades.Usuarios;
+// using Api.Funcionalidades.Tickets;
+// using Api.Funcionalidades.Comentarios;
+// using Microsoft.EntityFrameworkCore;
+// using biblioteca.Dominio;
 
-namespace Api.Funcionalidades.Proyectos;
+// namespace Api.Funcionalidades.Proyectos;
 
-public class ProyectoService : IProyectoService
-{
-    private readonly ApplicationDbContext _context;
 
-    public ProyectoService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+// public interface IProyectoService
+// {
+//     List<ProyectoQueryDto> ObtenerProyectos();
+//     void CrearProyeto(ProyectoCommandDto proyectoDto);
+//     void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto);
+//     void EliminarProyecto(Guid idProyecto);
+// }
 
-    public IEnumerable<ProyectoQueryDto> GetProyectos()
-    {
-        return _context.Proyectos
-            .Include(p => p.Tickets)
-            .Include(p => p.Usuarios)
-            .Select(p => new ProyectoQueryDto
-            {
-                Id = p.Id,
-                Nombre = p.Nombre,
-                Descripcion = p.Descripcion,
-                FechaCreacion = p.FechaCreacion,
-                FechaInicio = p.FechaInicio,
-                FechaFin = p.FechaFin,
-                Tickets = p.Tickets.Select(t => new TicketQueryDto
-                {
-                    Id = t.Id,
-                    Titulo = t.Titulo,
-                    Descripcion = t.Descripcion,
-                    Estado = t.Estado,
-                    Prioridad = t.Prioridad,
-                    FechaCreacion = t.FechaCreacion,
-                    UsuarioAsignadoId = t.UsuarioAsignadoId,
-                    ProyectoId = t.ProyectoId
-                }).ToList(),
-                Usuarios = p.Usuarios.Select(u => new UsuarioQueryDto
-                {
-                    Id = u.Id,
-                    NombreCompleto = u.NombreCompleto,
-                    NombreUsuario = u.NombreUsuario,
-                    Email = u.Email,
-                    Rol = u.Rol
-                }).ToList()
-            })
-            .ToList();
-    }
+// public class ProyectoService : IProyectoService
+// {
+//     private readonly GestionTareasDbContext _context;
 
-    public void CreateProyecto(ProyectoCommandDto proyectoDto)
-    {
-        var proyecto = new Proyecto
-        {
-            Nombre = proyectoDto.Nombre,
-            Descripcion = proyectoDto.Descripcion,
-            FechaCreacion = DateTime.UtcNow,
-            FechaInicio = proyectoDto.FechaInicio,
-            FechaFin = proyectoDto.FechaFin
-        };
+//     public ProyectoService(GestionTareasDbContext context)
+//     {
+//         this._context = context;
+//     }
 
-        _context.Proyectos.Add(proyecto);
-        _context.SaveChanges();
-    }
+//     public List<ProyectoQueryDto> ObtenerProyectos()
+//     {
+//         return _context.Proyectos
+//             .Include(p => p.Usuarios)
+//             .Include(p => p.Tickets)
+//             .Select(p => new ProyectoQueryDto
+//             {
+//                 Id = p.Id,
+//                 Nombre = p.Nombre,
+//                 Descripcion = p.Descripcion,
+//                 FechaCreacion = p.FechaCreacion,
+//                 FechaInicio = p.FechaCreacion,
+//                 Usuarios = p.Usuarios?.Select(u => new UsuarioQueryDto
+//                 {
+//                     Id = u.Id,
+//                     NombreCompleto = u.Nombre,
+//                     Email = u.Email,
+//                     NombreUsuario = u.Nombre,
+//                     Contraseña = u.Password,
+//                     Rol = "Usuario",
+//                     FechaCreacion = u.FechaCreacion,
+//                     Proyectos = new List<ProyectoQueryDto>(),
+//                     TicketsAsignados = new List<TicketQueryDto>()
+//                 }).ToList() ?? new List<UsuarioQueryDto>(),
+//                 Tickets = p.Tickets?.Select(t => new TicketQueryDto
+//                 {
+//                     Id = t.Id,
+//                     Titulo = t.Nombre,
+//                     Descripcion = t.Descripcion,
+//                     Estado = t.Estado,
+//                     FechaCreacion = t.FechaInicio,
+//                     UsuarioAsignadoId = t.Usuario,
+//                     ProyectoId = p.Id,
+//                     Comentarios = new List<ComentarioQueryDto>()
+//                 }).ToList() ?? new List<TicketQueryDto>()
+//             }).ToList();
+//     }
 
-    public void UpdateProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto)
-    {
-        var proyecto = _context.Proyectos.Find(idProyecto);
-        if (proyecto == null)
-            throw new KeyNotFoundException("Proyecto not found");
+//     public void CrearProyeto(ProyectoCommandDto proyectoDto)
+//     {
+//         var proyecto = new Proyecto
+//         {
+//             Nombre = proyectoDto.Nombre,
+//             Descripcion = proyectoDto.Descripcion,
+//             CreacionUsuario = "Sistema",
+//             FechaCreacion = DateTime.Now
+//         };
 
-        proyecto.Nombre = proyectoDto.Nombre;
-        proyecto.Descripcion = proyectoDto.Descripcion;
-        proyecto.FechaInicio = proyectoDto.FechaInicio;
-        proyecto.FechaFin = proyectoDto.FechaFin;
+//         _context.Proyectos.Add(proyecto);
+//         _context.SaveChanges();
+//     }
 
-        _context.SaveChanges();
-    }
+//     public void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto)
+//     {
+//         var proyecto = _context.Proyectos.Find(idProyecto);
+//         if (proyecto == null)
+//             throw new KeyNotFoundException("Proyecto no encontrado");
 
-    public void DeleteProyecto(Guid idProyecto)
-    {
-        var proyecto = _context.Proyectos.Find(idProyecto);
-        if (proyecto == null)
-            throw new KeyNotFoundException("Proyecto not found");
+//         proyecto.Nombre = proyectoDto.Nombre;
+//         proyecto.Descripcion = proyectoDto.Descripcion;
 
-        _context.Proyectos.Remove(proyecto);
-        _context.SaveChanges();
-    }
-}
+//         _context.SaveChanges();
+//     }
+
+//     public void EliminarProyecto(Guid idProyecto)
+//     {
+//         var proyecto = _context.Proyectos
+//             .Include(p => p.Tickets)
+//             .ThenInclude(t => t.Actividad)
+//             .FirstOrDefault(p => p.Id == idProyecto);
+
+//         if (proyecto == null)
+//             throw new KeyNotFoundException("Proyecto no encontrado");
+
+//         // Eliminar comentarios de los tickets
+//         foreach (var ticket in proyecto.Tickets ?? new List<Ticket>())
+//         {
+//             _context.Comentarios.RemoveRange(ticket.Actividad);
+//         }
+
+//         // Eliminar tickets
+//         _context.Tickets.RemoveRange(proyecto.Tickets ?? new List<Ticket>());
+
+//         // Eliminar proyecto
+//         _context.Proyectos.Remove(proyecto);
+//         _context.SaveChanges();
+//     }
+// }

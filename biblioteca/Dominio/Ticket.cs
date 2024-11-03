@@ -25,48 +25,4 @@ public class Ticket
     public List<Comentario> Actividad { get; set; } = [];
 
 
-    public void CambiarEstado(string nuevoEstado)
-    {
-        if (!string.IsNullOrEmpty(nuevoEstado))
-        {
-            Estado = nuevoEstado;
-        }
-        else
-        {
-            throw new Exception("El estado no puede ser vacío");
-        }
-    }
-    public void ModificarInformacion(string? nombre = null, string? descripcion = null, Usuario? usuarioAsignado = null)
-    {
-        // if (nombre != null)
-        //     Nombre = nombre;
-
-        // if (descripcion != null)
-        //     Descripcion = descripcion;
-
-        // if (usuarioAsignado != null)
-        //     Usuario = usuarioAsignado;
-        Console.WriteLine("Modificar informacion");
-    }
-
-    public void BorrarTicket()
-    {
-        Console.WriteLine("eliminado");
-    }
-
-    public void AgregarComentario(Usuario unnusuario, string contenido, Ticket unticket)
-    {
-        // Actividad.Add(new Comentario()
-        // {
-        //     Ticket = unticket,
-        //     Usuario = unnusuario,
-        //     Contenido = contenido,
-        //     Fecha = DateTime.Now,
-        //     FechaCreacion = DateTime.Now,
-        //     CreacionUsuario = unnusuario.Nombre
-            
-        // });
-        Console.WriteLine("Agregar");
-    }
-
 }

@@ -10,46 +10,38 @@ using Api.Funcionalidades.Comentarios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var connectionString = builder.Configuration.GetConnectionString("gestiontarea_db");
 builder.Services.AddDbContext<GestionTareasDbContext>(option => option.UseMySql(connectionString, new MySqlServerVersion("8.0.39")));
-var options = new DbContextOptionsBuilder<GestionTareasDbContext>();
-options.UseMySql(connectionString, new MySqlServerVersion("8.0.39"));
-var context = new GestionTareasDbContext(options.Options);
 
-context.Database.EnsureCreated();
-
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger(options =>{
+    app.UseSwagger(options =>
+    {
         options.RouteTemplate = "openapi/{documentName}.json";
     });
     app.MapScalarApiReference();
 }
 
-
 app.UseHttpsRedirection();
 
-
-var apiGroup = app.MapGroup("/api");
+app.MapGroup("/api")
+    .MapUsuarioEndpoints();
 
 // Map all endpoints
-apiGroup.MapUsuarioEndpoints();
-apiGroup.MapProyectoEndpoints();
-apiGroup.MapTicketEndpoints();
-apiGroup.MapComentarioEndpoints();
 
-builder.Services.AddScoped<IComentarioService, IComentarioService>();
-builder.Services.AddScoped<IProyectoService, IProyectoService>();
-builder.Services.AddScoped<ITicketService, ITicketService>();
-builder.Services.AddScoped<IUsuarioService, IUsuarioService>();
+// apiGroup.MapProyectoEndpoints();
+// apiGroup.MapTicketEndpoints();
+// apiGroup.MapComentarioEndpoints();
+
+// builder.Services.AddScoped<IComentarioServaice, ComentarioService>();
+// builder.Services.AddScoped<IProyectoService, ProyectoService>();
+// builder.Services.AddScoped<ITicketService, TicketService>();
 
 app.Run();

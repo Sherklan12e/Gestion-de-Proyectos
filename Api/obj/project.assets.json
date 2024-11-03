@@ -802,7 +802,7 @@
           }
         }
       },
-      "Scalar.AspNetCore/1.2.9": {
+      "Scalar.AspNetCore/1.2.29": {
         "type": "package",
         "compile": {
           "lib/net8.0/Scalar.AspNetCore.dll": {
@@ -2844,10 +2844,10 @@
         "pomelo.entityframeworkcore.mysql.nuspec"
       ]
     },
-    "Scalar.AspNetCore/1.2.9": {
-      "sha512": "+AGXNT0F/+eznJCPDMb2fejRc6bugNbe/ENVR+Mry1wB0TxX4hXdNiwwguv5bm2eCGZbANcdeiJek5TIRG9Y4Q==",
+    "Scalar.AspNetCore/1.2.29": {
+      "sha512": "FwJetFzxqbzikkz13Q4jo4GP+/4QEdHy1PxcBYr6ahRKviInYAmTAwhTynAx1sr3IA1H9mvFJt9Zkr0ZWV36nQ==",
       "type": "package",
-      "path": "scalar.aspnetcore/1.2.9",
+      "path": "scalar.aspnetcore/1.2.29",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2857,7 +2857,7 @@
         "lib/net8.0/Scalar.AspNetCore.xml",
         "lib/net9.0/Scalar.AspNetCore.dll",
         "lib/net9.0/Scalar.AspNetCore.xml",
-        "scalar.aspnetcore.1.2.9.nupkg.sha512",
+        "scalar.aspnetcore.1.2.29.nupkg.sha512",
         "scalar.aspnetcore.nuspec"
       ]
     },
@@ -4159,41 +4159,38 @@
       "Microsoft.EntityFrameworkCore.Design >= 8.0.10",
       "Microsoft.EntityFrameworkCore.Tools >= 8.0.10",
       "Pomelo.EntityFrameworkCore.MySql >= 8.0.2",
-      "Scalar.AspNetCore >= 1.2.9",
+      "Scalar.AspNetCore >= 1.2.29",
       "Swashbuckle.AspNetCore >= 6.9.0",
       "biblioteca >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lab15-PC01\\.nuget\\packages\\": {}
+    "C:\\Users\\dev\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lab15-PC01\\Desktop\\Gestion-de-Proyectos\\Api\\Api.csproj",
+      "projectUniqueName": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Api\\Api.csproj",
       "projectName": "Api",
-      "projectPath": "C:\\Users\\Lab15-PC01\\Desktop\\Gestion-de-Proyectos\\Api\\Api.csproj",
-      "packagesPath": "C:\\Users\\Lab15-PC01\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lab15-PC01\\Desktop\\Gestion-de-Proyectos\\Api\\obj\\",
+      "projectPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Api\\Api.csproj",
+      "packagesPath": "C:\\Users\\dev\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Lab15-PC01\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\dev\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Lab15-PC01\\Desktop\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj": {
-              "projectPath": "C:\\Users\\Lab15-PC01\\Desktop\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj"
+            "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj": {
+              "projectPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj"
             }
           }
         }
@@ -4239,7 +4236,7 @@
           },
           "Scalar.AspNetCore": {
             "target": "Package",
-            "version": "[1.2.9, )"
+            "version": "[1.2.29, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
@@ -4265,7 +4262,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

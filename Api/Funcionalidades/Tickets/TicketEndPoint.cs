@@ -1,36 +1,32 @@
-using Microsoft.AspNetCore.Mvc;
+// using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Funcionalidades.Tickets;
+// namespace Api.Funcionalidades.Tickets;
 
-public static class TicketEndpoints
-{
-    public static RouteGroupBuilder MapTicketEndpoints(this RouteGroupBuilder app)
-    {
-        app.MapGet("/tickets", ([FromServices] ITicketService ticketService) =>
-        {
-            var tickets = ticketService.GetTickets();
-            return Results.Ok(tickets);
-        });
+// public static class TicketEndpoints
+// {
+//     public static RouteGroupBuilder MapTicketEndpoints(this RouteGroupBuilder app)
+//     {
+//         app.MapGet("/tickets", ([FromServices] ITicketService ticketService) =>
+//         {
+//              throw new NotImplementedException();
+//         });
 
-        app.MapPost("/ticket", ([FromServices] ITicketService ticketService, TicketCommandDto ticketDto) =>
-        {
-            ticketService.CreateTicket(ticketDto);
-            return Results.Ok();
-        });
+//         app.MapPost("/ticket", ([FromServices] ITicketService ticketService, TicketCommandDto ticketDto) =>
+//         {
+//              throw new NotImplementedException();
+//         });
 
-        app.MapPut("/ticket/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket, TicketCommandDto ticketDto) =>
-        {
-            ticketService.UpdateTicket(idTicket, ticketDto);
-            return Results.Ok();
-        });
+//         app.MapPut("/ticket/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket, TicketCommandDto ticketDto) =>
+//         {
+//              throw new NotImplementedException();
+//         });
 
-        app.MapDelete("/ticket/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket) =>
-        {
-            ticketService.DeleteTicket(idTicket);
-            return Results.Ok();
-        });
+//         app.MapDelete("/ticket/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket) =>
+//         {
+//              throw new NotImplementedException();
+//         });
 
-        return app;
-    }
-}
+//         return app;
+//     }
+// }
 

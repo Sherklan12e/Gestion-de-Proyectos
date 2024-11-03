@@ -1,80 +1,97 @@
-using Microsoft.EntityFrameworkCore;
+// using Api.Funcionalidades.Comentarios;
+// using Api.Funcionalidades.Usuarios;
+// using Api.Persistencia;
+// using biblioteca.Dominio;
+// using Microsoft.EntityFrameworkCore;
 
-namespace Api.Funcionalidades.Tickets;
+// namespace Api.Funcionalidades.Tickets;
+// public interface ITicketService
+// {
+//     List<TicketQueryDto> ObtenerTickets();
+//     void CrearTicket(TicketCommandDto ticketDto);
+//     void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto);
+//     void DeleteTicket(Guid idTicket);
+// }
 
-public class TicketService : ITicketService
-{
-    private readonly ApplicationDbContext _context;
+// public class TicketService : ITicketService
+// {
+//     private readonly GestionTareasDbContext context;
 
-    public TicketService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+//     public TicketService(GestionTareasDbContext context)
+//     {
+//         this.context = context;
+//     }
 
-    public IEnumerable<TicketQueryDto> GetTickets()
-    {
-        return _context.Tickets
-            .Include(t => t.Comentarios)
-            .Select(t => new TicketQueryDto
-            {
-                Id = t.Id,
-                Titulo = t.Titulo,
-                Descripcion = t.Descripcion,
-                Estado = t.Estado,
-                Prioridad = t.Prioridad,
-                FechaCreacion = t.FechaCreacion,
-                UsuarioAsignadoId = t.UsuarioAsignadoId,
-                ProyectoId = t.ProyectoId,
-                Comentarios = t.Comentarios.Select(c => new ComentarioQueryDto
-                {
-                    Id = c.Id,
-                    Contenido = c.Contenido,
-                    FechaCreacion = c.FechaCreacion,
-                    UsuarioId = c.UsuarioId,
-                    TicketId = c.TicketId
-                }).ToList()
-            })
-            .ToList();
-    }
+//     public List<TicketQueryDto> ObtenerTickets()
+//     {
+//         return context.Tickets
+//             .Include(t => t.Actividad)
+//             .Include(t => t.Usuario)
+//             .Select(t => new TicketQueryDto
+//             {
+//                 Id = t.Id,
+//                 Titulo = t.Nombre,
+//                 Descripcion = t.Descripcion,
+//                 Estado = t.Estado,
+//                 FechaCreacion = t.FechaInicio,
+//                 UsuarioAsignadoId = t.Usuario,
+//                 Comentarios = t.Actividad.Select(c => new ComentarioQueryDto
+//                 {
+//                     Id = c.Id,
+//                     Contenido = c.Contenido,
+//                     FechaCreacion = c.FechaCreacion,
+//                     UsuarioId = c.Usuario,
+//                     TicketId = c.Ticket
+//                 }).ToList()
+//             }).ToList();
+//     }
 
-    public void CreateTicket(TicketCommandDto ticketDto)
-    {
-        var ticket = new Ticket
-        {
-            Titulo = ticketDto.Titulo,
-            Descripcion = ticketDto.Descripcion,
-            Estado = ticketDto.Estado,
-            Prioridad = ticketDto.Prioridad,
-            FechaCreacion = DateTime.UtcNow,
-            UsuarioAsignadoId = ticketDto.UsuarioAsignadoId,
-            ProyectoId = ticketDto.ProyectoId
-        };
+//     public void CrearTicket(TicketCommandDto ticketDto)
+//     {
+//         var usuario = context.Usuarios.Find(ticketDto.UsuarioAsignadoId);
+//         if (usuario == null)
+//             throw new KeyNotFoundException("Usuario asignado no encontrado");
 
-        _context.Tickets.Add(ticket);
-        _context.SaveChanges();
-    }
+//         var ticket = new Ticket
+//         {
+//             Nombre = ticketDto.Titulo,
+//             Descripcion = ticketDto.Descripcion,
+//             Estado = ticketDto.Estado,
+//             Usuario = usuario.Id,
+//             FechaInicio = DateTime.Now
+//         };
 
-    public void UpdateTicket(Guid idTicket, TicketCommandDto ticketDto)
-    {
-        var ticket = _context.Tickets.Find(idTicket);
-        if (ticket == null)
-            throw new KeyNotFoundException("Ticket not found");
+//         context.Tickets.Add(ticket);
+//         context.SaveChanges();
+//     }
 
-        ticket.Titulo = ticketDto.Titulo;
-        ticket.Descripcion = ticketDto.Descripcion;
-        ticket.Estado = ticketDto.Estado;
-        ticket.Prioridad = ticketDto.Prioridad;
+//     public void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto)
+//     {
+//         var ticket = context.Tickets
+//             .Include(t => t.Usuario)
+//             .FirstOrDefault(t => t.Id == idTicket);
 
-        _context.SaveChanges();
-    }
+//         if (ticket == null)
+//             throw new KeyNotFoundException("Ticket no encontrado");
 
-    public void DeleteTicket(Guid idTicket)
-    {
-        var ticket = _context.Tickets.Find(idTicket);
-        if (ticket == null)
-            throw new KeyNotFoundException("Ticket not found");
+//         ticket.Nombre = ticketDto.Titulo;
+//         ticket.Descripcion = ticketDto.Descripcion;
+//         ticket.Estado = ticketDto.Estado;
 
-        _context.Tickets.Remove(ticket);
-        _context.SaveChanges();
-    }
-}
+//         context.SaveChanges();
+//     }
+
+//     public void DeleteTicket(Guid idTicket)
+//     {
+//         var ticket = context.Tickets
+//             .Include(t => t.Actividad)
+//             .FirstOrDefault(t => t.Id == idTicket);
+
+//         if (ticket == null)
+//             throw new KeyNotFoundException("Ticket no encontrado");
+
+//         context.Comentarios.RemoveRange(ticket.Actividad);
+//         context.Tickets.Remove(ticket);
+//         context.SaveChanges();
+//     }
+// }

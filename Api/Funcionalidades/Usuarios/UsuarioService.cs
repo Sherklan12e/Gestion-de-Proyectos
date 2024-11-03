@@ -1,144 +1,98 @@
+using Api.Persistencia;
 using Microsoft.EntityFrameworkCore;
-
+using Api.Funcionalidades.Proyectos;
+using Api.Funcionalidades.Comentarios;
+using biblioteca.Dominio;
 namespace Api.Funcionalidades.Usuarios;
-
+public interface IUsuarioService
+{
+    List<UsuarioQueryDto> ObtenerUsuarios();
+    // UsuarioQueryDto? ObtenerUsuarioPorId(Guid idUsuario);
+    void CrearUsuario(UsuarioCommandDto usuarioDto);
+    void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
+    void EliminarUsuario(Guid idUsuario);
+}
 public class UsuarioService : IUsuarioService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly GestionTareasDbContext context;
 
-    public UsuarioService(ApplicationDbContext context)
+    public UsuarioService(GestionTareasDbContext context)
     {
-        _context = context;
+        this.context = context;
     }
 
-    public IEnumerable<UsuarioQueryDto> GetUsuarios()
+     public List<UsuarioQueryDto> ObtenerUsuarios()
     {
-        return _context.Usuarios
-            .Include(u => u.Proyectos)
-            .Include(u => u.TicketsAsignados)
+        return context.Usuarios
+            .Include(u => u.ProyectoAsignados)
+            .Include(u => u.ComentariosUsuario)
+            .AsEnumerable() 
             .Select(u => new UsuarioQueryDto
             {
                 Id = u.Id,
-                NombreCompleto = u.NombreCompleto,
-                NombreUsuario = u.NombreUsuario,
+                Nombre = u.Nombre,
                 Email = u.Email,
-                Rol = u.Rol,
+                Password = u.Password,
                 FechaCreacion = u.FechaCreacion,
-                Proyectos = u.Proyectos.Select(p => new ProyectoQueryDto
+                ProyectoAsignados = (u.ProyectoAsignados ?? new List<Proyecto>()).Select(p => new ProyectoQueryDto
                 {
                     Id = p.Id,
                     Nombre = p.Nombre,
                     Descripcion = p.Descripcion,
-                    FechaCreacion = p.FechaCreacion,
-                    FechaInicio = p.FechaInicio,
-                    FechaFin = p.FechaFin
+                    FechaCreacion = p.FechaCreacion
                 }).ToList(),
-                TicketsAsignados = u.TicketsAsignados.Select(t => new TicketQueryDto
+                ComentariosUsuario = (u.ComentariosUsuario ?? new List<Comentario>()).Select(c => new ComentarioQueryDto
                 {
-                    Id = t.Id,
-                    Titulo = t.Titulo,
-                    Descripcion = t.Descripcion,
-                    Estado = t.Estado,
-                    Prioridad = t.Prioridad,
-                    FechaCreacion = t.FechaCreacion,
-                    UsuarioAsignadoId = t.UsuarioAsignadoId,
-                    ProyectoId = t.ProyectoId
+                    Id = c.Id,
+                    Contenido = c.Contenido,
+                    FechaCreacion = c.FechaCreacion,
+                    Fecha = c.Fecha,
+                    UsuarioId = c.Usuario,
+                    TicketId = c.Ticket
                 }).ToList()
-            })
-            .ToList();
+            }).ToList();
     }
 
-    public UsuarioQueryDto? GetUsuarioById(Guid idUsuario)
-    {
-        return _context.Usuarios
-            .Include(u => u.Proyectos)
-            .Include(u => u.TicketsAsignados)
-            .Where(u => u.Id == idUsuario)
-            .Select(u => new UsuarioQueryDto
-            {
-                Id = u.Id,
-                NombreCompleto = u.NombreCompleto,
-                NombreUsuario = u.NombreUsuario,
-                Email = u.Email,
-                Rol = u.Rol,
-                FechaCreacion = u.FechaCreacion,
-                Proyectos = u.Proyectos.Select(p => new ProyectoQueryDto
-                {
-                    Id = p.Id,
-                    Nombre = p.Nombre,
-                    Descripcion = p.Descripcion,
-                    FechaCreacion = p.FechaCreacion,
-                    FechaInicio = p.FechaInicio,
-                    FechaFin = p.FechaFin
-                }).ToList(),
-                TicketsAsignados = u.TicketsAsignados.Select(t => new TicketQueryDto
-                {
-                    Id = t.Id,
-                    Titulo = t.Titulo,
-                    Descripcion = t.Descripcion,
-                    Estado = t.Estado,
-                    Prioridad = t.Prioridad,
-                    FechaCreacion = t.FechaCreacion,
-                    UsuarioAsignadoId = t.UsuarioAsignadoId,
-                    ProyectoId = t.ProyectoId
-                }).ToList()
-            })
-            .FirstOrDefault();
-    }
+  
 
-    public UsuarioQueryDto CreateUsuario(UsuarioCommandDto usuarioDto)
+    public void CrearUsuario(UsuarioCommandDto usuarioDto)
     {
         var usuario = new Usuario
         {
-            NombreCompleto = usuarioDto.NombreCompleto,
-            NombreUsuario = usuarioDto.NombreUsuario,
+            Nombre = usuarioDto.Nombre,
             Email = usuarioDto.Email,
-            Contraseña = BCrypt.Net.BCrypt.HashPassword(usuarioDto.Contraseña),
-            Rol = usuarioDto.Rol,
-            FechaCreacion = DateTime.UtcNow
+            Password = usuarioDto.Password,
+            CreacionUsuario = usuarioDto.Nombre,
+            FechaCreacion = DateTime.Now
         };
 
-        _context.Usuarios.Add(usuario);
-        _context.SaveChanges();
-
-        return new UsuarioQueryDto
-        {
-            Id = usuario.Id,
-            NombreCompleto = usuario.NombreCompleto,
-            NombreUsuario = usuario.NombreUsuario,
-            Email = usuario.Email,
-            Rol = usuario.Rol,
-            FechaCreacion = usuario.FechaCreacion
-        };
+        context.Usuarios.Add(usuario);
+        context.SaveChanges();
     }
 
-    public bool UpdateUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto)
+    public void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto)
     {
-        var usuario = _context.Usuarios.Find(idUsuario);
+        var usuario = context.Usuarios.Find(idUsuario);
         if (usuario == null)
-            return false;
+            throw new KeyNotFoundException("Usuario no encontrado");
 
-        usuario.NombreCompleto = usuarioDto.NombreCompleto;
-        usuario.NombreUsuario = usuarioDto.NombreUsuario;
+        usuario.Nombre = usuarioDto.Nombre;
         usuario.Email = usuarioDto.Email;
-        if (!string.IsNullOrEmpty(usuarioDto.Contraseña))
-        {
-            usuario.Contraseña = BCrypt.Net.BCrypt.HashPassword(usuarioDto.Contraseña);
-        }
-        usuario.Rol = usuarioDto.Rol;
+        usuario.Password = usuarioDto.Password;
 
-        _context.SaveChanges();
-        return true;
+        context.SaveChanges();
     }
 
-    public bool DeleteUsuario(Guid idUsuario)
+    public void EliminarUsuario(Guid idUsuario)
     {
-        var usuario = _context.Usuarios.Find(idUsuario);
-        if (usuario == null)
-            return false;
+        var usuario = context.Usuarios
+            .Include(u => u.ComentariosUsuario)
+            .FirstOrDefault(u => u.Id == idUsuario);
 
-        _context.Usuarios.Remove(usuario);
-        _context.SaveChanges();
-        return true;
+        if (usuario == null)
+            throw new KeyNotFoundException("Usuario no encontrado");
+
+        context.Usuarios.Remove(usuario);
+        context.SaveChanges();
     }
 }

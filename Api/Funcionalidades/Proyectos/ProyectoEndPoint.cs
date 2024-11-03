@@ -1,36 +1,32 @@
-using Microsoft.AspNetCore.Mvc;
+// using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Funcionalidades.Proyectos;
+// namespace Api.Funcionalidades.Proyectos;
 
-public static class ProyectoEndpoints
-{
-    public static RouteGroupBuilder MapProyectoEndpoints(this RouteGroupBuilder app)
-    {
-        app.MapGet("/proyectos", ([FromServices] IProyectoService proyectoService) =>
-        {
-            var proyectos = proyectoService.GetProyectos();
-            return Results.Ok(proyectos);
-        });
+// public static class ProyectoEndpoints
+// {
+//     public static RouteGroupBuilder MapProyectoEndpoints(this RouteGroupBuilder app)
+//     {
+//         app.MapGet("/proyectos", ([FromServices] IProyectoService proyectoService) =>
+//         {
+//             throw new NotImplementedException();
+//         });
 
-        app.MapPost("/proyecto", ([FromServices] IProyectoService proyectoService, ProyectoCommandDto proyectoDto) =>
-        {
-            proyectoService.CreateProyecto(proyectoDto);
-            return Results.Ok();
-        });
+//         app.MapPost("/proyecto", ([FromServices] IProyectoService proyectoService, ProyectoCommandDto proyectoDto) =>
+//         {
+//             throw new NotImplementedException();
+//         });
 
-        app.MapPut("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto, ProyectoCommandDto proyectoDto) =>
-        {
-            proyectoService.UpdateProyecto(idProyecto, proyectoDto);
-            return Results.Ok();
-        });
+//         app.MapPut("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto, ProyectoCommandDto proyectoDto) =>
+//         {
+//             throw new NotImplementedException();
+//         });
 
-        app.MapDelete("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto) =>
-        {
-            proyectoService.DeleteProyecto(idProyecto);
-            return Results.Ok();
-        });
+//         app.MapDelete("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto) =>
+//         {
+//             throw new NotImplementedException();
+//         });
 
-        return app;
-    }
-}
+//         return app;
+//     }
+// }
 

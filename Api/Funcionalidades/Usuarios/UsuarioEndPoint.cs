@@ -6,37 +6,51 @@ public static class UsuarioEndpoints
 {
     public static RouteGroupBuilder MapUsuarioEndpoints(this RouteGroupBuilder app)
     {
-        app.MapGet("/usuarios", ([FromServices] IUsuarioService usuarioService) =>
+        app.MapGet("/", async (IUsuarioService usuarioService) =>
         {
-            var usuarios = usuarioService.GetUsuarios();
-            return Results.Ok(usuarios);
+            return Results.Ok(usuarioService.ObtenerUsuarios());
         });
 
-        app.MapGet("/usuario/{idUsuario}", ([FromServices] IUsuarioService usuarioService, Guid idUsuario) =>
+        // app.MapGet("/{id}", async (Guid id, IUsuarioService usuarioService) =>
+        // {
+        //     var usuario = usuarioService.ObtenerUsuarioPorId(id);
+        //     if (usuario == null)
+        //         return Results.NotFound("Usuario no encontrado");
+        //     return Results.Ok(usuario);
+        // });
+
+        app.MapPost("/", async (UsuarioCommandDto usuarioDto, IUsuarioService usuarioService) =>
         {
-            var usuario = usuarioService.GetUsuarioById(idUsuario);
-            return usuario != null ? Results.Ok(usuario) : Results.NotFound();
+            usuarioService.CrearUsuario(usuarioDto);
+            return Results.Created();
         });
 
-        app.MapPost("/usuario", ([FromServices] IUsuarioService usuarioService, UsuarioCommandDto usuarioDto) =>
+        app.MapPut("/{id}", async (Guid id, UsuarioCommandDto usuarioDto, IUsuarioService usuarioService) =>
         {
-            var nuevoUsuario = usuarioService.CreateUsuario(usuarioDto);
-            return Results.Created($"/usuario/{nuevoUsuario.Id}", nuevoUsuario);
+            try
+            {
+                usuarioService.ActualizarUsuario(id, usuarioDto);
+                return Results.NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
         });
 
-        app.MapPut("/usuario/{idUsuario}", ([FromServices] IUsuarioService usuarioService, Guid idUsuario, UsuarioCommandDto usuarioDto) =>
+        app.MapDelete("/{id}", async (Guid id, IUsuarioService usuarioService) =>
         {
-            var actualizado = usuarioService.UpdateUsuario(idUsuario, usuarioDto);
-            return actualizado ? Results.Ok() : Results.NotFound();
-        });
-
-        app.MapDelete("/usuario/{idUsuario}", ([FromServices] IUsuarioService usuarioService, Guid idUsuario) =>
-        {
-            var eliminado = usuarioService.DeleteUsuario(idUsuario);
-            return eliminado ? Results.Ok() : Results.NotFound();
+            try
+            {
+                usuarioService.EliminarUsuario(id);
+                return Results.NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
         });
 
         return app;
     }
 }
-
