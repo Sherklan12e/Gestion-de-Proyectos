@@ -19,7 +19,7 @@ public static class UsuarioEndpoints
         //     return Results.Ok(usuario);
         // });
 
-        app.MapPost("/", async (UsuarioCommandDto usuarioDto, IUsuarioService usuarioService) =>
+        app.MapPost("/usuario", async (UsuarioCommandDto usuarioDto, IUsuarioService usuarioService) =>
         {
             usuarioService.CrearUsuario(usuarioDto);
             return Results.Created();
