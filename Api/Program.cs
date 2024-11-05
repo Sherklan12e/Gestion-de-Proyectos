@@ -16,8 +16,12 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("gestiontarea_db");
 builder.Services.AddDbContext<GestionTareasDbContext>(option => option.UseMySql(connectionString, new MySqlServerVersion("8.0.39")));
 
+
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IComentarioService, ComentarioService>();
+builder.Services.AddScoped<IProyectoService, ProyectoService>();
+
 
 var options = new DbContextOptionsBuilder<GestionTareasDbContext>();
 options.UseMySql(connectionString, new MySqlServerVersion("8.0.39"));
@@ -39,6 +43,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+
+
 app.MapGroup("/api")
     .MapUsuarioEndpoints()
     .WithTags("Usuario");
@@ -47,16 +53,20 @@ app.MapGroup("/api")
     .MapTicketEndpoints()
     .WithTags("Tickets");
 
+app.MapGroup("/api")
+    .MapProyectoEndpoints()
+    .WithTags("Proyectos");
 
 
-// Map all endpoints
+app.MapGroup("/api")
+    .MapComentarioEndpoints()
+    .WithTags("Comentarios");
 
-// apiGroup.MapProyectoEndpoints();
 
-// apiGroup.MapComentarioEndpoints();
 
-// builder.Services.AddScoped<IComentarioServaice, ComentarioService>();
-// builder.Services.AddScoped<IProyectoService, ProyectoService>();
+
+
+
 
 
 app.Run();

@@ -21,6 +21,7 @@ namespace Api.Persistencia.Migraciones
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Nombre = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    CreardoProyecto = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Descripcion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreacionUsuario = table.Column<string>(type: "longtext", nullable: false)
@@ -55,33 +56,6 @@ namespace Api.Persistencia.Migraciones
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Ticket",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Usuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Nombre = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Descripcion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Estado = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    FechaInicio = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
-                    FechaFin = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: true),
-                    ProyectoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Ticket", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Ticket_Proyecto_ProyectoId",
-                        column: x => x.ProyectoId,
-                        principalTable: "Proyecto",
-                        principalColumn: "Id");
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "ProyectoUsuario",
                 columns: table => new
                 {
@@ -107,6 +81,40 @@ namespace Api.Persistencia.Migraciones
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Ticket",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Usuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Proyecto = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    Nombre = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descripcion = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Estado = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    FechaInicio = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
+                    FechaFin = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: true),
+                    ProyectoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ticket", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ticket_Proyecto_ProyectoId",
+                        column: x => x.ProyectoId,
+                        principalTable: "Proyecto",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Ticket_Usuario_UsuarioId",
+                        column: x => x.UsuarioId,
+                        principalTable: "Usuario",
+                        principalColumn: "Id");
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Comentario",
                 columns: table => new
                 {
@@ -118,7 +126,6 @@ namespace Api.Persistencia.Migraciones
                     Fecha = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
                     TicketId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    UsuarioId1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreacionUsuario = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -136,11 +143,6 @@ namespace Api.Persistencia.Migraciones
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Comentario_Usuario_UsuarioId1",
-                        column: x => x.UsuarioId1,
-                        principalTable: "Usuario",
-                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -155,11 +157,6 @@ namespace Api.Persistencia.Migraciones
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comentario_UsuarioId1",
-                table: "Comentario",
-                column: "UsuarioId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ProyectoUsuario_UsuariosId",
                 table: "ProyectoUsuario",
                 column: "UsuariosId");
@@ -168,6 +165,11 @@ namespace Api.Persistencia.Migraciones
                 name: "IX_Ticket_ProyectoId",
                 table: "Ticket",
                 column: "ProyectoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ticket_UsuarioId",
+                table: "Ticket",
+                column: "UsuarioId");
         }
 
         /// <inheritdoc />
@@ -183,10 +185,10 @@ namespace Api.Persistencia.Migraciones
                 name: "Ticket");
 
             migrationBuilder.DropTable(
-                name: "Usuario");
+                name: "Proyecto");
 
             migrationBuilder.DropTable(
-                name: "Proyecto");
+                name: "Usuario");
         }
     }
 }

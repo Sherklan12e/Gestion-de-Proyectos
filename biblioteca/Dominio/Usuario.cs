@@ -19,6 +19,6 @@ public class Usuario : Auditoria
     public required string Email {get;set;}
     public List<Proyecto>? ProyectoAsignados {get; set;} = [];
     public List<Comentario>? ComentariosUsuario {get; set;} = [];
-    public List<Comentario>? TicketsAsignados {get; set;} = [];
+    public List<Ticket>? TicketsAsignados {get; set;} = [];
     
 }

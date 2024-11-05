@@ -11,6 +11,10 @@ public class Proyecto : Auditoria
     [Required]
     [StringLength(50)]
     public required string Nombre { get; set; }
+    
+    [Required]
+    public Guid CreardoProyecto { get; set; }
+
     [Required]
     [StringLength(50)]
     public required string Descripcion { get; set; }

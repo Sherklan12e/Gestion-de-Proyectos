@@ -11,7 +11,7 @@ public interface IUsuarioService
     void CrearUsuario(UsuarioCommandDto usuarioDto);
     void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
     void EliminarUsuario(Guid idUsuario);
-    UsuarioQueryDto? AutenticarUsuario(string email);
+    UsuarioQueryDto? AutenticarUsuario(string email,  string password);
 }
 public class UsuarioService : IUsuarioService
 {
@@ -22,7 +22,7 @@ public class UsuarioService : IUsuarioService
         this.context = context;
     }
 
-    public object? AutenticarUsuario(string email, string password)
+    UsuarioQueryDto? IUsuarioService.AutenticarUsuario(string email, string password)
     {
         var usuario = context.Usuarios.FirstOrDefault(u => u.Email == email && u.Password == password);
         if (usuario == null)
@@ -117,4 +117,7 @@ public class UsuarioService : IUsuarioService
     {
         throw new NotImplementedException();
     }
+
+    
+   
 }

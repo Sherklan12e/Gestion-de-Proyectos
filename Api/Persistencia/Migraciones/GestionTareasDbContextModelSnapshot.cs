@@ -72,16 +72,11 @@ namespace Api.Persistencia.Migraciones
                     b.Property<Guid?>("UsuarioId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("UsuarioId1")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("TicketId");
 
                     b.HasIndex("UsuarioId");
-
-                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Comentario");
                 });
@@ -95,6 +90,9 @@ namespace Api.Persistencia.Migraciones
                     b.Property<string>("CreacionUsuario")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<Guid>("CreardoProyecto")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
@@ -144,15 +142,23 @@ namespace Api.Persistencia.Migraciones
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("Proyecto")
+                        .HasColumnType("char(36)");
+
                     b.Property<Guid?>("ProyectoId")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("Usuario")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("UsuarioId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ProyectoId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Ticket");
                 });
@@ -214,10 +220,6 @@ namespace Api.Persistencia.Migraciones
                     b.HasOne("biblioteca.Dominio.Usuario", null)
                         .WithMany("ComentariosUsuario")
                         .HasForeignKey("UsuarioId");
-
-                    b.HasOne("biblioteca.Dominio.Usuario", null)
-                        .WithMany("TicketsAsignados")
-                        .HasForeignKey("UsuarioId1");
                 });
 
             modelBuilder.Entity("biblioteca.Dominio.Ticket", b =>
@@ -225,6 +227,10 @@ namespace Api.Persistencia.Migraciones
                     b.HasOne("biblioteca.Dominio.Proyecto", null)
                         .WithMany("Tickets")
                         .HasForeignKey("ProyectoId");
+
+                    b.HasOne("biblioteca.Dominio.Usuario", null)
+                        .WithMany("TicketsAsignados")
+                        .HasForeignKey("UsuarioId");
                 });
 
             modelBuilder.Entity("biblioteca.Dominio.Proyecto", b =>
