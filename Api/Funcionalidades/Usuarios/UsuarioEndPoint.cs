@@ -10,7 +10,14 @@ public static class UsuarioEndpoints
         {
             return Results.Ok(usuarioService.ObtenerUsuarios());
         });
+        app.MapPost("/login", async (IUsuarioService usuarioService, UsuarioCommandDto usuarioDto) =>
+        {
+            var usuario = usuarioService.AutenticarUsuario(usuarioDto.Email, usuarioDto.Password);
+            if (usuario == null)
+                return Results.NotFound("Credenciales incorrectas");
 
+            return Results.Ok(usuario);
+        });
         // app.MapGet("/{id}", async (Guid id, IUsuarioService usuarioService) =>
         // {
         //     var usuario = usuarioService.ObtenerUsuarioPorId(id);

@@ -11,6 +11,7 @@ public interface IUsuarioService
     void CrearUsuario(UsuarioCommandDto usuarioDto);
     void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
     void EliminarUsuario(Guid idUsuario);
+    UsuarioQueryDto? AutenticarUsuario(string email);
 }
 public class UsuarioService : IUsuarioService
 {
@@ -21,7 +22,23 @@ public class UsuarioService : IUsuarioService
         this.context = context;
     }
 
-     public List<UsuarioQueryDto> ObtenerUsuarios()
+    public object? AutenticarUsuario(string email, string password)
+    {
+        var usuario = context.Usuarios.FirstOrDefault(u => u.Email == email && u.Password == password);
+        if (usuario == null)
+            return null;
+
+        return new UsuarioQueryDto
+        {
+            Id = usuario.Id,
+            Nombre = usuario.Nombre,
+            Email = usuario.Email,
+            Password = usuario.Password,
+            FechaCreacion = usuario.FechaCreacion,
+            // Agrega otros campos que necesites
+        };
+    }
+    public List<UsuarioQueryDto> ObtenerUsuarios()
     {
         return context.Usuarios
             .Include(u => u.ProyectoAsignados)
@@ -94,5 +111,10 @@ public class UsuarioService : IUsuarioService
 
         context.Usuarios.Remove(usuario);
         context.SaveChanges();
+    }
+
+    public UsuarioQueryDto? AutenticarUsuario(string email)
+    {
+        throw new NotImplementedException();
     }
 }
