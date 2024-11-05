@@ -14,4 +14,5 @@ public class ProyectoCommandDto
 {
     public required string Nombre { get; set; }
     public required string Descripcion { get; set; }
+    public Guid CreacionUsuario {get;set;}
 }

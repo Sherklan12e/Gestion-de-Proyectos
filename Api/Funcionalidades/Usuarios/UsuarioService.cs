@@ -79,7 +79,7 @@ public class UsuarioService : IUsuarioService
             Nombre = usuarioDto.Nombre,
             Email = usuarioDto.Email,
             Password = usuarioDto.Password,
-            
+            CreacionUsuario = usuarioDto.CreacionUsuario,
             FechaCreacion = DateTime.Now
         };
 

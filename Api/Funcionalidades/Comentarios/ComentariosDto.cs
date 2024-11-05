@@ -16,4 +16,5 @@ public class ComentarioCommandDto
     public required string Contenido { get; set; }
     public Guid UsuarioId { get; set; }
     public Guid TicketId { get; set; }
+    public Guid CreacionUsuario {get;set;}
 }

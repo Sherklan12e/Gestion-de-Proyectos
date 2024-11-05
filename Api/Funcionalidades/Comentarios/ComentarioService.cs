@@ -41,7 +41,7 @@ public class ComentarioService : IComentarioService
         var comentario = new Comentario
         {
             Contenido = comentarioDto.Contenido,
-            CreacionUsuario = "Sistema",
+            CreacionUsuario = comentarioDto.CreacionUsuario,
             FechaCreacion = DateTime.Now,
             Fecha = DateTime.Now
         };

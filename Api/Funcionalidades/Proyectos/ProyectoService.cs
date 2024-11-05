@@ -72,7 +72,7 @@ public List<ProyectoQueryDto> ObtenerProyectos()
         {
             Nombre = proyectoDto.Nombre,
             Descripcion = proyectoDto.Descripcion,
-            CreacionUsuario = "Sistema",
+            CreacionUsuario = proyectoDto.CreacionUsuario,
             FechaCreacion = DateTime.Now
         };
 
