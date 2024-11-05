@@ -7,8 +7,6 @@ public class ComentarioQueryDto : ComentarioCommandDto
     public Guid Id { get; set; }
     public DateTime FechaCreacion { get; set; }
     public DateTime Fecha { get; set; }
-    public Guid UsuarioId { get; set; }
-    public Guid TicketId { get; set; }
     public UsuarioQueryDto? Usuario { get; set; }
     public TicketQueryDto? Ticket { get; set; }
 }

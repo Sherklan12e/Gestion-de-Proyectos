@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Persistencia.Migraciones
 {
     [DbContext(typeof(GestionTareasDbContext))]
-    [Migration("20241105173618_UnNuevoCambio")]
+    [Migration("20241105174248_UnNuevoCambio")]
     partial class UnNuevoCambio
     {
         /// <inheritdoc />

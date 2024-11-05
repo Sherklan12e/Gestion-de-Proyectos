@@ -12,6 +12,8 @@ public class Comentario: Auditoria
     public Guid Ticket { get; set; }
     [ForeignKey("Usuario")]
     public Guid Usuario  {get; set; }
+
+    
     [Required]
     [StringLength(50)]
     public required string Contenido {get; set; }

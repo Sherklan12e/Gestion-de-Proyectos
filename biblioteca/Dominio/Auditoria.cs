@@ -9,5 +9,6 @@ namespace biblioteca.Dominio
     {
         public required string CreacionUsuario {get;set;} = string.Empty ;
         public required DateTime FechaCreacion {get;set;}=DateTime.Now;
+        
     }
 }
