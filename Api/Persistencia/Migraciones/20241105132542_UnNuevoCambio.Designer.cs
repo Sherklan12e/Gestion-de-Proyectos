@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Persistencia.Migraciones
 {
     [DbContext(typeof(GestionTareasDbContext))]
-    [Migration("20241103143114_MigracionPrue")]
-    partial class MigracionPrue
+    [Migration("20241105132542_UnNuevoCambio")]
+    partial class UnNuevoCambio
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -75,11 +75,16 @@ namespace Api.Persistencia.Migraciones
                     b.Property<Guid?>("UsuarioId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("UsuarioId1")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TicketId");
 
                     b.HasIndex("UsuarioId");
+
+                    b.HasIndex("UsuarioId1");
 
                     b.ToTable("Comentario");
                 });
@@ -212,6 +217,10 @@ namespace Api.Persistencia.Migraciones
                     b.HasOne("biblioteca.Dominio.Usuario", null)
                         .WithMany("ComentariosUsuario")
                         .HasForeignKey("UsuarioId");
+
+                    b.HasOne("biblioteca.Dominio.Usuario", null)
+                        .WithMany("TicketsAsignados")
+                        .HasForeignKey("UsuarioId1");
                 });
 
             modelBuilder.Entity("biblioteca.Dominio.Ticket", b =>
@@ -234,6 +243,8 @@ namespace Api.Persistencia.Migraciones
             modelBuilder.Entity("biblioteca.Dominio.Usuario", b =>
                 {
                     b.Navigation("ComentariosUsuario");
+
+                    b.Navigation("TicketsAsignados");
                 });
 #pragma warning restore 612, 618
         }

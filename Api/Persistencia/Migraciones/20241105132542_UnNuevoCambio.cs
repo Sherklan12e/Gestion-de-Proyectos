@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Api.Persistencia.Migraciones
 {
     /// <inheritdoc />
-    public partial class MigracionPrue : Migration
+    public partial class UnNuevoCambio : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -118,6 +118,7 @@ namespace Api.Persistencia.Migraciones
                     Fecha = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
                     TicketId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    UsuarioId1 = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreacionUsuario = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -135,6 +136,11 @@ namespace Api.Persistencia.Migraciones
                         column: x => x.UsuarioId,
                         principalTable: "Usuario",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Comentario_Usuario_UsuarioId1",
+                        column: x => x.UsuarioId1,
+                        principalTable: "Usuario",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -147,6 +153,11 @@ namespace Api.Persistencia.Migraciones
                 name: "IX_Comentario_UsuarioId",
                 table: "Comentario",
                 column: "UsuarioId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comentario_UsuarioId1",
+                table: "Comentario",
+                column: "UsuarioId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProyectoUsuario_UsuariosId",

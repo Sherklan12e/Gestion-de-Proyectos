@@ -23,28 +23,28 @@ public class TicketService : ITicketService
     }
 
     public List<TicketQueryDto> ObtenerTickets()
-    {
-        return context.Tickets
-            .Include(t => t.Actividad)
-            .Include(t => t.Usuario)
-            .Select(t => new TicketQueryDto
+{
+    return context.Tickets
+        .Include(t => t.Actividad)  // Solo incluimos 'Actividad' si es una navegación a otra entidad.
+        .Select(t => new TicketQueryDto
+        {
+            Id = t.Id,
+            Nombre = t.Nombre,
+            Descripcion = t.Descripcion,
+            Estado = t.Estado,
+            FechaCreacion = t.FechaInicio,
+            UsuarioAsignadoId = t.Usuario,  // Asignamos directamente la clave foránea.
+            Actividad = t.Actividad.Select(c => new ComentarioQueryDto
             {
-                Id = t.Id,
-                Nombre = t.Nombre,
-                Descripcion = t.Descripcion,
-                Estado = t.Estado,
-                FechaCreacion = t.FechaInicio,
-                UsuarioAsignadoId = t.Usuario,
-                Actividad = t.Actividad.Select(c => new ComentarioQueryDto
-                {
-                    Id = c.Id,
-                    Contenido = c.Contenido,
-                    FechaCreacion = c.FechaCreacion,
-                    UsuarioId = c.Usuario,
-                    TicketId = c.Ticket
-                }).ToList()
-            }).ToList();
-    }
+                Id = c.Id,
+                Contenido = c.Contenido,
+                FechaCreacion = c.FechaCreacion,
+                UsuarioId = c.Usuario,  // Asignamos la propiedad correspondiente.
+                TicketId = c.Ticket
+            }).ToList()
+        }).ToList();
+}
+
 
     public void CrearTicket(TicketCommandDto ticketDto)
     {

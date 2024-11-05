@@ -1,13 +1,15 @@
-namespace Api.Funcionalidades.Usuarios;
 using Api.Funcionalidades.Proyectos;
 using Api.Funcionalidades.Comentarios;
+using Api.Funcionalidades.Tickets;
 
+namespace Api.Funcionalidades.Usuarios;
 public class UsuarioQueryDto : UsuarioCommandDto
 {
     public Guid Id { get; set; }
     public DateTime FechaCreacion { get; set; }
     public List<ProyectoQueryDto> ProyectoAsignados { get; set; } = [];
     public List<ComentarioQueryDto> ComentariosUsuario { get; set; } = [];
+    public List<TicketQueryDto> TicketsAsignados { get; set; } = [];
 }
 
 public class UsuarioCommandDto
