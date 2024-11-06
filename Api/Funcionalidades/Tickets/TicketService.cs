@@ -1,5 +1,6 @@
 using Api.Funcionalidades.Comentarios;
 using Api.Funcionalidades.Usuarios;
+using Api.Funcionalidades.Tickets;
 using Api.Persistencia;
 using biblioteca.Dominio;
 using Microsoft.EntityFrameworkCore;
@@ -23,47 +24,82 @@ public class TicketService : ITicketService
     }
 
     public List<TicketQueryDto> ObtenerTickets()
-{
-    return context.Tickets
-        .Include(t => t.Actividad)  // Solo incluimos 'Actividad' si es una navegación a otra entidad.
-        .Select(t => new TicketQueryDto
-        {
-            Id = t.Id,
-            Nombre = t.Nombre,
-            Descripcion = t.Descripcion,
-            Estado = t.Estado,
-            FechaCreacion = t.FechaInicio,
-            UsuarioAsignadoId = t.Usuario,  // Asignamos directamente la clave foránea.
-            Actividad = t.Actividad.Select(c => new ComentarioQueryDto
+    {
+        return context.Tickets
+            .Include(t => t.Actividad)  // Solo incluimos 'Actividad' si es una navegación a otra entidad.
+            .Select(t => new TicketQueryDto
             {
-                Id = c.Id,
-                Contenido = c.Contenido,
-                FechaCreacion = c.FechaCreacion,
-                UsuarioId = c.Usuario,  // Asignamos la propiedad correspondiente.
-                TicketId = c.Ticket
-            }).ToList()
-        }).ToList();
-}
+                Id = t.Id,
+                Nombre = t.Nombre,
+                Descripcion = t.Descripcion,
+                Estado = t.Estado,
+                FechaCreacion = t.FechaInicio,
+                UsuarioAsignadoId = t.Usuario,  // Asignamos directamente la clave foránea.
+                Actividad = t.Actividad.Select(c => new ComentarioQueryDto
+                {
+                    Id = c.Id,
+                    Contenido = c.Contenido,
+                    FechaCreacion = c.FechaCreacion,
+                    UsuarioId = c.Usuario,  // Asignamos la propiedad correspondiente.
+                    TicketId = c.Ticket
+                }).ToList()
+            }).ToList();
+    }
 
 
     public void CrearTicket(TicketCommandDto ticketDto)
     {
-        var usuario = context.Usuarios.Find(ticketDto.UsuarioAsignadoId);
+        // Buscar el usuario asignado
+        var usuario = context.Usuarios.SingleOrDefault(u => u.Id == ticketDto.UsuarioAsignadoId);
         if (usuario == null)
+        {
             throw new KeyNotFoundException("Usuario asignado no encontrado");
+        }
 
+        // Buscar el proyecto
+        var proyecto = context.Proyectos.SingleOrDefault(p => p.Id == ticketDto.ProyectoId);
+        if (proyecto == null)
+        {
+            throw new KeyNotFoundException("Proyecto no encontrado");
+        }
+
+        // Verificar que el proyecto tenga usuarios asignados
+        if (proyecto.Usuarios == null )
+        {
+            throw new InvalidOperationException("El proyecto no tiene usuarios asignados.");
+        }
+
+        // Crear el ticket
         var ticket = new Ticket
         {
             Nombre = ticketDto.Nombre,
             Descripcion = ticketDto.Descripcion,
             Estado = ticketDto.Estado,
-            Usuario = usuario.Id,
+            Usuario = ticketDto.UsuarioAsignadoId,
+            Proyecto = ticketDto.ProyectoId,
             FechaInicio = DateTime.Now
         };
 
+        
         context.Tickets.Add(ticket);
+        // Asignar el ticket al usuario dentro del proyecto
+        var usuarioAsignado = proyecto.Usuarios.SingleOrDefault(u => u.Id == ticketDto.UsuarioAsignadoId);
+        if (usuarioAsignado is not null)
+        {
+           
+            usuario.TicketsAsignados.Add(ticket);
+            context.Usuarios.Update(usuarioAsignado);
+            Console.WriteLine("a")  ;
+        }
+
+        // Asignar el ticket al proyecto
+        proyecto.Tickets.Add(ticket);
+        context.Proyectos.Update(proyecto);
+
+        // Guardar los cambios en un solo bloque
         context.SaveChanges();
     }
+
 
     public void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto)
     {

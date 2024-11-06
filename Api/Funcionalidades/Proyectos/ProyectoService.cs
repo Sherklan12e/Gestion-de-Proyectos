@@ -14,6 +14,7 @@ public interface IProyectoService
     void CrearProyeto(ProyectoCommandDto proyectoDto);
     void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto);
     void EliminarProyecto(Guid idProyecto);
+    void AsicnarUsuario(Guid idProyecto, Guid idUsuario);
 }
 
 public class ProyectoService : IProyectoService
@@ -25,59 +26,77 @@ public class ProyectoService : IProyectoService
         this._context = context;
     }
 
-public List<ProyectoQueryDto> ObtenerProyectos()
-{
-    return _context.Proyectos
-        .Include(p => p.Usuarios)
-        .Include(p => p.Tickets)
-        .Select(p => new ProyectoQueryDto
-        {
-            Id = p.Id,
-            Nombre = p.Nombre,
-            Descripcion = p.Descripcion,
-            FechaCreacion = p.FechaCreacion,
-            Usuarios = p.Usuarios != null 
-                ? p.Usuarios.Select(u => new UsuarioQueryDto
-                {
-                    Id = u.Id,
-                    Nombre = u.Nombre,
-                    Email = u.Email,
-                    Password = u.Password,
-                    FechaCreacion = u.FechaCreacion,
-                    ProyectoAsignados = new List<ProyectoQueryDto>(), 
-                    TicketsAsignados = new List<TicketQueryDto>() 
-                }).ToList() 
-                : new List<UsuarioQueryDto>(),
+    public void AsicnarUsuario(Guid idProyecto, Guid idUsuario){
+        var proyecto = _context.Proyectos.SingleOrDefault(proyecto => proyecto.Id == idProyecto);
+        var usuario = _context.Usuarios.SingleOrDefault(usuario => usuario.Id == idUsuario);
+        if (proyecto is not null && usuario is not null)
+        {   
+            // Agregar usuario a proyecto
+            proyecto.Usuarios.Add(usuario);
+            _context.SaveChanges();
+        }
+    }
+    public List<ProyectoQueryDto> ObtenerProyectos()
+    {
+        return _context.Proyectos
+            .Include(p => p.Usuarios)
+            .Include(p => p.Tickets)
+            .Select(p => new ProyectoQueryDto
+            {
+                Id = p.Id,
+                Nombre = p.Nombre,
+                Descripcion = p.Descripcion,
+                FechaCreacion = p.FechaCreacion,
+                Usuarios = p.Usuarios != null
+                    ? p.Usuarios.Select(u => new UsuarioQueryDto
+                    {
+                        Id = u.Id,
+                        Nombre = u.Nombre,
+                        Email = u.Email,
+                        Password = u.Password,
+                        FechaCreacion = u.FechaCreacion,
+                        ProyectoAsignados = new List<ProyectoQueryDto>(),
+                        TicketsAsignados = new List<TicketQueryDto>()
+                    }).ToList()
+                    : new List<UsuarioQueryDto>(),
 
-            Tickets = p.Tickets != null 
-                ? p.Tickets.Select(t => new TicketQueryDto
-                {
-                    Id = t.Id,
-                    Nombre = t.Nombre,
-                    Descripcion = t.Descripcion,
-                    Estado = t.Estado,
-                    FechaCreacion = DateTime.Now,
-                    FechaInicio = t.FechaInicio,
-                    FechaFin = t.FechaFin,
-                    UsuarioAsignadoId = t.Usuario,
-                    Actividad = new List<ComentarioQueryDto>() 
-                }).ToList() 
-                : new List<TicketQueryDto>()
-        }).ToList();
-}
+                Tickets = p.Tickets != null
+                    ? p.Tickets.Select(t => new TicketQueryDto
+                    {
+                        Id = t.Id,
+                        Nombre = t.Nombre,
+                        Descripcion = t.Descripcion,
+                        Estado = t.Estado,
+                        FechaCreacion = DateTime.Now,
+                        FechaInicio = t.FechaInicio,
+                        FechaFin = t.FechaFin,
+                        UsuarioAsignadoId = t.Usuario,
+                        Actividad = new List<ComentarioQueryDto>()
+                    }).ToList()
+                    : new List<TicketQueryDto>()
+            }).ToList();
+    }
 
     public void CrearProyeto(ProyectoCommandDto proyectoDto)
     {
-        var proyecto = new Proyecto
+        var usuario = _context.Usuarios.SingleOrDefault(user => user.Id == proyectoDto.CreacionUsuario);
+        if (usuario is not null)
         {
-            Nombre = proyectoDto.Nombre,
-            Descripcion = proyectoDto.Descripcion,
-            CreacionUsuario = proyectoDto.CreacionUsuario,
-            FechaCreacion = DateTime.Now
-        };
+            var proyecto = new Proyecto
+            {
+                Nombre = proyectoDto.Nombre,
+                Descripcion = proyectoDto.Descripcion,
+                CreacionUsuario = proyectoDto.CreacionUsuario,
+                FechaCreacion = DateTime.Now
+            };
+            // Guarda al creardor
+            usuario.ProyectoAsignados.Add(proyecto);
+            _context.Usuarios.Update(usuario);
 
-        _context.Proyectos.Add(proyecto);
-        _context.SaveChanges();
+            _context.Proyectos.Add(proyecto);
+            _context.SaveChanges();
+        }
+
     }
 
     public void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto)
@@ -94,7 +113,7 @@ public List<ProyectoQueryDto> ObtenerProyectos()
 
     public void EliminarProyecto(Guid idProyecto)
     {
-        var proyecto = _context.Proyectos 
+        var proyecto = _context.Proyectos
             .Include(p => p.Tickets)
             .ThenInclude(t => t.Actividad)
             .FirstOrDefault(p => p.Id == idProyecto);

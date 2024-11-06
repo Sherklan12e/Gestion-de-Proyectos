@@ -8,22 +8,47 @@ public static class ProyectoEndpoints
     {
         app.MapGet("/proyectos", ([FromServices] IProyectoService proyectoService) =>
         {
-            throw new NotImplementedException();
+            return Results.Ok(proyectoService.ObtenerProyectos());
         });
-
+        app.MapPost("/proyectos/{idProyecto}/usuario/{idUsuario}", ([FromServices] IProyectoService proyectoService, Guid idProyecto, Guid idUsuario) =>
+        {
+            
+            proyectoService.AsicnarUsuario(idProyecto, idUsuario);
+            return Results.Ok();
+            
+            
+       
+        });
         app.MapPost("/proyecto", ([FromServices] IProyectoService proyectoService, ProyectoCommandDto proyectoDto) =>
         {
-            throw new NotImplementedException();
+            proyectoService.CrearProyeto(proyectoDto);
+            return Results.Created();
         });
 
         app.MapPut("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto, ProyectoCommandDto proyectoDto) =>
         {
-            throw new NotImplementedException();
+            try
+            {
+                proyectoService.ActualizarProyecto(idProyecto, proyectoDto);
+                return Results.NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
         });
 
         app.MapDelete("/proyecto/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto) =>
         {
-            throw new NotImplementedException();
+            try
+            {
+                proyectoService.EliminarProyecto(idProyecto);
+                return Results.NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
         });
 
         return app;
