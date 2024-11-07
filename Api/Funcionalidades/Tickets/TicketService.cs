@@ -49,22 +49,26 @@ public class TicketService : ITicketService
 
     public void CrearTicket(TicketCommandDto ticketDto)
     {
-        // Buscar el usuario asignado
-        var usuario = context.Usuarios.SingleOrDefault(u => u.Id == ticketDto.UsuarioAsignadoId);
+        // Buscar el usuario asignado incluyendo sus tickets
+        var usuario = context.Usuarios
+            .Include(u => u.TicketsAsignados)
+            .SingleOrDefault(u => u.Id == ticketDto.UsuarioAsignadoId);
         if (usuario == null)
         {
             throw new KeyNotFoundException("Usuario asignado no encontrado");
         }
 
-        // Buscar el proyecto
-        var proyecto = context.Proyectos.SingleOrDefault(p => p.Id == ticketDto.ProyectoId);
+        // Buscar el proyecto incluyendo usuarios
+        var proyecto = context.Proyectos
+            .Include(p => p.Usuarios)
+            .Include(p => p.Tickets)
+            .SingleOrDefault(p => p.Id == ticketDto.ProyectoId);
         if (proyecto == null)
         {
             throw new KeyNotFoundException("Proyecto no encontrado");
         }
 
-        // Verificar que el proyecto tenga usuarios asignados
-        if (proyecto.Usuarios == null )
+        if (proyecto.Usuarios == null || !proyecto.Usuarios.Any())
         {
             throw new InvalidOperationException("El proyecto no tiene usuarios asignados.");
         }
@@ -80,23 +84,18 @@ public class TicketService : ITicketService
             FechaInicio = DateTime.Now
         };
 
-        
+        // Agregar el ticket a la base de datos
         context.Tickets.Add(ticket);
-        // Asignar el ticket al usuario dentro del proyecto
-        var usuarioAsignado = proyecto.Usuarios.SingleOrDefault(u => u.Id == ticketDto.UsuarioAsignadoId);
-        if (usuarioAsignado is not null)
-        {
-           
-            usuario.TicketsAsignados.Add(ticket);
-            context.Usuarios.Update(usuarioAsignado);
-            Console.WriteLine("a")  ;
-        }
+
+        // Asignar el ticket al usuario
+        usuario.TicketsAsignados?.Add(ticket);
+        context.Usuarios.Update(usuario);
 
         // Asignar el ticket al proyecto
-        proyecto.Tickets.Add(ticket);
+        proyecto.Tickets?.Add(ticket);
         context.Proyectos.Update(proyecto);
 
-        // Guardar los cambios en un solo bloque
+        // Guardar los cambios
         context.SaveChanges();
     }
 

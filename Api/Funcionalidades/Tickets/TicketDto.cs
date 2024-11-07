@@ -1,14 +1,14 @@
-namespace Api.Funcionalidades.Tickets;
 using Api.Funcionalidades.Comentarios;
 using Api.Funcionalidades.Usuarios;
 
+namespace Api.Funcionalidades.Tickets;
 public class TicketQueryDto : TicketCommandDto
 {
     public Guid Id { get; set; }
     public DateTime FechaCreacion { get; set; }
     public DateTime? FechaInicio { get; set; }
     public DateTime? FechaFin { get; set; }
-    public UsuarioQueryDto? Usuario { get; set; }
+    public Guid Usuario { get; set; }
     public List<ComentarioQueryDto> Actividad { get; set; } = [];
 }
 

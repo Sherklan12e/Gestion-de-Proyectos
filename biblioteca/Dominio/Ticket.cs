@@ -11,6 +11,7 @@ public class Ticket
     public Guid Id { get; set; }= Guid.NewGuid();
     [ForeignKey("Usuario")]
     public Guid  Usuario  { get; set; }
+    
     [ForeignKey("Proyecto")]
     public Guid Proyecto {get;set;}
 

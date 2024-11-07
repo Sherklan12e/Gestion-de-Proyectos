@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/et12alumno/Escritorio/Gestion-de-Proyectos/biblioteca/biblioteca.csproj": {}
+    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj": {}
   },
   "projects": {
-    "/home/et12alumno/Escritorio/Gestion-de-Proyectos/biblioteca/biblioteca.csproj": {
+    "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/et12alumno/Escritorio/Gestion-de-Proyectos/biblioteca/biblioteca.csproj",
+        "projectUniqueName": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj",
         "projectName": "biblioteca",
-        "projectPath": "/home/et12alumno/Escritorio/Gestion-de-Proyectos/biblioteca/biblioteca.csproj",
-        "packagesPath": "/home/et12alumno/.nuget/packages/",
-        "outputPath": "/home/et12alumno/Escritorio/Gestion-de-Proyectos/biblioteca/obj/",
+        "projectPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\biblioteca.csproj",
+        "packagesPath": "C:\\Users\\dev\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dev\\Documents\\repos\\Gestion-de-Proyectos\\biblioteca\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/et12alumno/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\dev\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,6 +32,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -59,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

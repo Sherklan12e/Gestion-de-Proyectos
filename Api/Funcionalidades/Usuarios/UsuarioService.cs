@@ -2,7 +2,9 @@ using Api.Persistencia;
 using Microsoft.EntityFrameworkCore;
 using Api.Funcionalidades.Proyectos;
 using Api.Funcionalidades.Comentarios;
+using Api.Funcionalidades.Tickets;
 using biblioteca.Dominio;
+using Microsoft.AspNetCore.Components.Web;
 namespace Api.Funcionalidades.Usuarios;
 public interface IUsuarioService
 {
@@ -11,7 +13,8 @@ public interface IUsuarioService
     void CrearUsuario(UsuarioCommandDto usuarioDto);
     void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
     void EliminarUsuario(Guid idUsuario);
-    UsuarioQueryDto? AutenticarUsuario(string email,  string password);
+    UsuarioQueryDto? AutenticarUsuario(string email, string password);
+    UsuarioQueryDto TraerUsuario(Guid idUsuario);
 }
 public class UsuarioService : IUsuarioService
 {
@@ -43,7 +46,9 @@ public class UsuarioService : IUsuarioService
         return context.Usuarios
             .Include(u => u.ProyectoAsignados)
             .Include(u => u.ComentariosUsuario)
-            .AsEnumerable() 
+            .Include(u => u.TicketsAsignados)
+                .ThenInclude(t => t.Actividad) // Include comments related to each ticket
+            .AsEnumerable()
             .Select(u => new UsuarioQueryDto
             {
                 Id = u.Id,
@@ -66,11 +71,31 @@ public class UsuarioService : IUsuarioService
                     Fecha = c.Fecha,
                     UsuarioId = c.Usuario,
                     TicketId = c.Ticket
+                }).ToList(),
+                TicketsAsignados = (u.TicketsAsignados ?? new List<Ticket>()).Select(t => new TicketQueryDto
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre,
+                    Descripcion = t.Descripcion,
+                    Estado = t.Estado,
+                    FechaCreacion = t.FechaInicio,
+                    FechaInicio = t.FechaInicio,
+                    FechaFin = t.FechaFin,
+                    Usuario = t.Usuario,
+                    Actividad = (t.Actividad ?? new List<Comentario>()).Select(a => new ComentarioQueryDto
+                    {
+                        Id = a.Id,
+                        Contenido = a.Contenido,
+                        FechaCreacion = a.FechaCreacion,
+                        Fecha = a.Fecha,
+                        UsuarioId = a.Usuario,
+                        TicketId = a.Ticket
+                    }).ToList()
                 }).ToList()
             }).ToList();
     }
 
-  
+
 
     public void CrearUsuario(UsuarioCommandDto usuarioDto)
     {
@@ -113,11 +138,65 @@ public class UsuarioService : IUsuarioService
         context.SaveChanges();
     }
 
-    public UsuarioQueryDto? AutenticarUsuario(string email)
-    {
-        throw new NotImplementedException();
-    }
-
-    
    
+
+    UsuarioQueryDto IUsuarioService.TraerUsuario(Guid idUsuario)
+{
+    var usuario = context.Usuarios
+        .Include(u => u.ProyectoAsignados)
+        .Include(u => u.ComentariosUsuario)
+        .Include(u => u.TicketsAsignados)
+            .ThenInclude(t => t.Actividad)
+        .FirstOrDefault(u => u.Id == idUsuario);
+
+    if (usuario == null)
+        throw new KeyNotFoundException("Usuario no encontrado");
+
+    return new UsuarioQueryDto
+    {
+        Id = usuario.Id,
+        Nombre = usuario.Nombre,
+        Email = usuario.Email,
+        Password = usuario.Password,
+        FechaCreacion = usuario.FechaCreacion,
+        ProyectoAsignados = (usuario.ProyectoAsignados ?? new List<Proyecto>()).Select(p => new ProyectoQueryDto
+        {
+            Id = p.Id,
+            Nombre = p.Nombre,
+            Descripcion = p.Descripcion,
+            FechaCreacion = p.FechaCreacion
+        }).ToList(),
+        ComentariosUsuario = (usuario.ComentariosUsuario ?? new List<Comentario>()).Select(c => new ComentarioQueryDto
+        {
+            Id = c.Id,
+            Contenido = c.Contenido,
+            FechaCreacion = c.FechaCreacion,
+            Fecha = c.Fecha,
+            UsuarioId = c.Usuario,
+            TicketId = c.Ticket
+        }).ToList(),
+        TicketsAsignados = (usuario.TicketsAsignados ?? new List<Ticket>()).Select(t => new TicketQueryDto
+        {
+            Id = t.Id,
+            Nombre = t.Nombre,
+            Descripcion = t.Descripcion,
+            Estado = t.Estado,
+            FechaCreacion = t.FechaInicio,
+            FechaInicio = t.FechaInicio,
+            FechaFin = t.FechaFin,
+            Usuario = t.Usuario,
+            Actividad = (t.Actividad ?? new List<Comentario>()).Select(a => new ComentarioQueryDto
+            {
+                Id = a.Id,
+                Contenido = a.Contenido,
+                FechaCreacion = a.FechaCreacion,
+                Fecha = a.Fecha,
+                UsuarioId = a.Usuario,
+                TicketId = a.Ticket
+            }).ToList()
+        }).ToList()
+    };
+}
+   
+    
 }
