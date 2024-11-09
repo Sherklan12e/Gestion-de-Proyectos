@@ -55,8 +55,6 @@ public class ProyectoService : IProyectoService
                         Email = u.Email,
                         Password = u.Password,
                         FechaCreacion = u.FechaCreacion,
-                        ProyectoAsignados = new List<ProyectoQueryDto>(),
-                        TicketsAsignados = new List<TicketQueryDto>()
                     }).ToList()
                     : new List<UsuarioQueryDto>(),
 
