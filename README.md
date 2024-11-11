@@ -8,3 +8,9 @@
         "*.json": "jsonc"
     },
 ```
+
+
+falat
+
+que el comentario se agregue al crearse
+eliminar algunos idusuairo

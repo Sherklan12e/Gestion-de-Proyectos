@@ -21,7 +21,7 @@ public class Ticket
     public required string Descripcion { get; set; }
     [Required]
     [StringLength(40)]
-    public string Estado { get; set; } = "Abierto";
+    public string Estado { get; set; }
     [Timestamp]
     public DateTime FechaInicio { get; set; }
     [Timestamp]

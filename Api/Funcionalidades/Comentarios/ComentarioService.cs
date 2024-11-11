@@ -43,7 +43,6 @@ public class ComentarioService : IComentarioService
             Contenido = comentarioDto.Contenido,
             CreacionUsuario = comentarioDto.CreacionUsuario,
             FechaCreacion = DateTime.Now,
-            Fecha = DateTime.Now
         };
 
         _context.Comentarios.Add(comentario);

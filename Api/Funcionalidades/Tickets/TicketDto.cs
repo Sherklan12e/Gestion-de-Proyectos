@@ -16,7 +16,7 @@ public class TicketCommandDto
 {
     public required string Nombre { get; set; }
     public required string Descripcion { get; set; }
-    public string Estado { get; set; } = "Abierto";
+    public string? Estado { get; set; }
     public Guid UsuarioAsignadoId { get; set; }
     public Guid ProyectoId {get;set;}
 

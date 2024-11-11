@@ -68,7 +68,6 @@ public class UsuarioService : IUsuarioService
                     Id = c.Id,
                     Contenido = c.Contenido,
                     FechaCreacion = c.FechaCreacion,
-                    Fecha = c.Fecha,
                     UsuarioId = c.Usuario,
                     TicketId = c.Ticket
                 }).ToList(),
@@ -82,15 +81,7 @@ public class UsuarioService : IUsuarioService
                     FechaInicio = t.FechaInicio,
                     FechaFin = t.FechaFin,
                     Usuario = t.Usuario,
-                    Actividad = (t.Actividad ?? new List<Comentario>()).Select(a => new ComentarioQueryDto
-                    {
-                        Id = a.Id,
-                        Contenido = a.Contenido,
-                        FechaCreacion = a.FechaCreacion,
-                        Fecha = a.Fecha,
-                        UsuarioId = a.Usuario,
-                        TicketId = a.Ticket
-                    }).ToList()
+                    
                 }).ToList()
             }).ToList();
     }
@@ -171,7 +162,6 @@ public class UsuarioService : IUsuarioService
             Id = c.Id,
             Contenido = c.Contenido,
             FechaCreacion = c.FechaCreacion,
-            Fecha = c.Fecha,
             UsuarioId = c.Usuario,
             TicketId = c.Ticket
         }).ToList(),
@@ -190,7 +180,6 @@ public class UsuarioService : IUsuarioService
                 Id = a.Id,
                 Contenido = a.Contenido,
                 FechaCreacion = a.FechaCreacion,
-                Fecha = a.Fecha,
                 UsuarioId = a.Usuario,
                 TicketId = a.Ticket
             }).ToList()

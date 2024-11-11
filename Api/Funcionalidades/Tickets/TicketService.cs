@@ -68,9 +68,17 @@ public class TicketService : ITicketService
             throw new KeyNotFoundException("Proyecto no encontrado");
         }
 
+        // Verificar que el proyecto tenga usuarios asignados
         if (proyecto.Usuarios == null || !proyecto.Usuarios.Any())
         {
             throw new InvalidOperationException("El proyecto no tiene usuarios asignados.");
+        }
+
+        // Verificar si el usuario está asignado al proyecto
+        var usuarioEnProyecto = proyecto.Usuarios.Any(u => u.Id == ticketDto.UsuarioAsignadoId);
+        if (!usuarioEnProyecto)
+        {
+            throw new InvalidOperationException("El usuario no está asignado a este proyecto.");
         }
 
         // Crear el ticket
@@ -78,7 +86,7 @@ public class TicketService : ITicketService
         {
             Nombre = ticketDto.Nombre,
             Descripcion = ticketDto.Descripcion,
-            Estado = ticketDto.Estado,
+            Estado = ticketDto.Estado ?? "Abierto",
             Usuario = ticketDto.UsuarioAsignadoId,
             Proyecto = ticketDto.ProyectoId,
             FechaInicio = DateTime.Now

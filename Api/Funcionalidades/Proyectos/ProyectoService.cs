@@ -26,15 +26,34 @@ public class ProyectoService : IProyectoService
         this._context = context;
     }
 
-    public void AsicnarUsuario(Guid idProyecto, Guid idUsuario){
-        var proyecto = _context.Proyectos.SingleOrDefault(proyecto => proyecto.Id == idProyecto);
+    public void AsicnarUsuario(Guid idProyecto, Guid idUsuario)
+    {
+        var proyecto = _context.Proyectos
+            .Include(p => p.Usuarios)
+            .SingleOrDefault(proyecto => proyecto.Id == idProyecto);
         var usuario = _context.Usuarios.SingleOrDefault(usuario => usuario.Id == idUsuario);
-        if (proyecto is not null && usuario is not null)
-        {   
-            // Agregar usuario a proyecto
-            proyecto.Usuarios.Add(usuario);
-            _context.SaveChanges();
+
+        if (proyecto == null)
+        {
+            throw new KeyNotFoundException("Proyecto no encontrado");
+
+
         }
+
+        if (usuario == null)
+        {
+            throw new KeyNotFoundException("Usuario no encontrado");
+        }
+
+        // Verificar si el usuario ya está asignado al proyecto
+        if (proyecto.Usuarios.Any(u => u.Id == idUsuario))
+        {
+            throw new InvalidOperationException("El usuario ya está asignado a este proyecto");
+        }
+
+        // Agregar usuario a proyecto
+        proyecto.Usuarios.Add(usuario);
+        _context.SaveChanges();
     }
     public List<ProyectoQueryDto> ObtenerProyectos()
     {
@@ -53,8 +72,8 @@ public class ProyectoService : IProyectoService
                         Id = u.Id,
                         Nombre = u.Nombre,
                         Email = u.Email,
-                        Password = u.Password,
-                        FechaCreacion = u.FechaCreacion,
+                        Password = u.Password, // Preguntar al profe sobre esto >?
+                        // FechaCreacion = u.FechaCreacion,
                     }).ToList()
                     : new List<UsuarioQueryDto>(),
 
