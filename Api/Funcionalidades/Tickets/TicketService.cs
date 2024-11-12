@@ -33,13 +33,11 @@ public class TicketService : ITicketService
                 Nombre = t.Nombre,
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
-                FechaCreacion = t.FechaInicio,
                 UsuarioAsignadoId = t.Usuario,  // Asignamos directamente la clave foránea.
                 Actividad = t.Actividad.Select(c => new ComentarioQueryDto
                 {
                     Id = c.Id,
                     Contenido = c.Contenido,
-                    FechaCreacion = c.FechaCreacion,
                     UsuarioId = c.Usuario,  // Asignamos la propiedad correspondiente.
                     TicketId = c.Ticket
                 }).ToList()
@@ -89,7 +87,9 @@ public class TicketService : ITicketService
             Estado = ticketDto.Estado ?? "Abierto",
             Usuario = ticketDto.UsuarioAsignadoId,
             Proyecto = ticketDto.ProyectoId,
-            FechaInicio = DateTime.Now
+            FechaInicio = null,
+            FechaCreacion = DateTime.Now,
+
         };
 
         // Agregar el ticket a la base de datos
@@ -111,7 +111,6 @@ public class TicketService : ITicketService
     public void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto)
     {
         var ticket = context.Tickets
-            .Include(t => t.Usuario)
             .FirstOrDefault(t => t.Id == idTicket);
 
         if (ticket == null)
@@ -119,6 +118,9 @@ public class TicketService : ITicketService
 
         ticket.Nombre = ticketDto.Nombre;
         ticket.Descripcion = ticketDto.Descripcion;
+        if (ticketDto.Estado != ticketDto.Estado){
+            ticket.FechaInicio = DateTime.Now;
+        }
         ticket.Estado = ticketDto.Estado;
 
         context.SaveChanges();

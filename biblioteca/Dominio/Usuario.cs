@@ -17,7 +17,10 @@ public class Usuario : Auditoria
     [Required]
     [StringLength(50)]
     public required string Email {get;set;}
+
+    [ForeignKey("IdUsuario")]
     public List<Proyecto>? ProyectoAsignados {get; set;} = [];
+   
     public List<Comentario>? ComentariosUsuario {get; set;} = [];
     public List<Ticket>? TicketsAsignados {get; set;} = [];
     

@@ -5,7 +5,7 @@ namespace biblioteca.Dominio;
 
 
 [Table("Ticket")]
-public class Ticket
+public class Ticket : Auditoria
 {
     [Key]
     public Guid Id { get; set; }= Guid.NewGuid();
@@ -21,11 +21,12 @@ public class Ticket
     public required string Descripcion { get; set; }
     [Required]
     [StringLength(40)]
-    public string Estado { get; set; }
+    public string Estado { get; set; }= "Abierto";
     [Timestamp]
-    public DateTime FechaInicio { get; set; }
+    public DateTime? FechaInicio { get; set; }
     [Timestamp]
     public DateTime? FechaFin { get; set; }
+    [ForeignKey("IdTicket")]
     public List<Comentario> Actividad { get; set; } = [];
 
 

@@ -24,15 +24,15 @@ namespace Api.Persistencia.Migraciones
 
             modelBuilder.Entity("ProyectoUsuario", b =>
                 {
-                    b.Property<Guid>("ProyectoAsignadosId")
+                    b.Property<Guid>("IdProyecto")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("UsuariosId")
+                    b.Property<Guid>("IdUsuario")
                         .HasColumnType("char(36)");
 
-                    b.HasKey("ProyectoAsignadosId", "UsuariosId");
+                    b.HasKey("IdProyecto", "IdUsuario");
 
-                    b.HasIndex("UsuariosId");
+                    b.HasIndex("IdUsuario");
 
                     b.ToTable("ProyectoUsuario");
                 });
@@ -59,10 +59,10 @@ namespace Api.Persistencia.Migraciones
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("Ticket")
+                    b.Property<Guid?>("IdTicket")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("TicketId")
+                    b.Property<Guid>("Ticket")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("Usuario")
@@ -73,7 +73,7 @@ namespace Api.Persistencia.Migraciones
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex("IdTicket");
 
                     b.HasIndex("UsuarioId");
 
@@ -113,6 +113,9 @@ namespace Api.Persistencia.Migraciones
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid>("CreacionUsuario")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -123,12 +126,15 @@ namespace Api.Persistencia.Migraciones
                         .HasMaxLength(40)
                         .HasColumnType("varchar(40)");
 
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<DateTime?>("FechaFin")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime>("FechaInicio")
+                    b.Property<DateTime?>("FechaInicio")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime(6)");
@@ -188,19 +194,39 @@ namespace Api.Persistencia.Migraciones
                     b.HasKey("Id");
 
                     b.ToTable("Usuario");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("abff9683-eaac-4a9a-80ce-f81f7aba2aca"),
+                            CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Email = "juan@gmail.com",
+                            FechaCreacion = new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6076),
+                            Nombre = "juan",
+                            Password = "1234"
+                        },
+                        new
+                        {
+                            Id = new Guid("a87bc8d6-0e8c-4a85-ba03-799059edd8d0"),
+                            CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Email = "leon@gmail.com",
+                            FechaCreacion = new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6091),
+                            Nombre = "leon",
+                            Password = "1234"
+                        });
                 });
 
             modelBuilder.Entity("ProyectoUsuario", b =>
                 {
                     b.HasOne("biblioteca.Dominio.Proyecto", null)
                         .WithMany()
-                        .HasForeignKey("ProyectoAsignadosId")
+                        .HasForeignKey("IdProyecto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("biblioteca.Dominio.Usuario", null)
                         .WithMany()
-                        .HasForeignKey("UsuariosId")
+                        .HasForeignKey("IdUsuario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -209,7 +235,7 @@ namespace Api.Persistencia.Migraciones
                 {
                     b.HasOne("biblioteca.Dominio.Ticket", null)
                         .WithMany("Actividad")
-                        .HasForeignKey("TicketId");
+                        .HasForeignKey("IdTicket");
 
                     b.HasOne("biblioteca.Dominio.Usuario", null)
                         .WithMany("ComentariosUsuario")
