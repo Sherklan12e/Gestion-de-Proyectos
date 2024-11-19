@@ -50,3 +50,16 @@ C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\bi
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\refint\biblioteca.dll
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.pdb
 C:\Users\dev\Documents\repos\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\ref\biblioteca.dll
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\bin\Debug\net8.0\biblioteca.deps.json
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\bin\Debug\net8.0\biblioteca.dll
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\bin\Debug\net8.0\biblioteca.pdb
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.csproj.AssemblyReference.cache
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.AssemblyInfoInputs.cache
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.AssemblyInfo.cs
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.csproj.CoreCompileInputs.cache
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.sourcelink.json
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.dll
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\refint\biblioteca.dll
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\biblioteca.pdb
+C:\Users\Lab15-PC01\Desktop\Gestion-de-Proyectos\biblioteca\obj\Debug\net8.0\ref\biblioteca.dll

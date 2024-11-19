@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Api.Persistencia.Migraciones
 {
     /// <inheritdoc />
-    public partial class UnNuevoCambio : Migration
+    public partial class MigracionInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,21 +58,21 @@ namespace Api.Persistencia.Migraciones
                 name: "ProyectoUsuario",
                 columns: table => new
                 {
-                    ProyectoAsignadosId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    UsuariosId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
+                    IdProyecto = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    IdUsuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProyectoUsuario", x => new { x.ProyectoAsignadosId, x.UsuariosId });
+                    table.PrimaryKey("PK_ProyectoUsuario", x => new { x.IdProyecto, x.IdUsuario });
                     table.ForeignKey(
-                        name: "FK_ProyectoUsuario_Proyecto_ProyectoAsignadosId",
-                        column: x => x.ProyectoAsignadosId,
+                        name: "FK_ProyectoUsuario_Proyecto_IdProyecto",
+                        column: x => x.IdProyecto,
                         principalTable: "Proyecto",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProyectoUsuario_Usuario_UsuariosId",
-                        column: x => x.UsuariosId,
+                        name: "FK_ProyectoUsuario_Usuario_IdUsuario",
+                        column: x => x.IdUsuario,
                         principalTable: "Usuario",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -90,10 +92,12 @@ namespace Api.Persistencia.Migraciones
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Estado = table.Column<string>(type: "varchar(40)", maxLength: 40, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    FechaInicio = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: true),
                     FechaFin = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: true),
                     ProyectoId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    CreacionUsuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,7 +125,7 @@ namespace Api.Persistencia.Migraciones
                     Contenido = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Fecha = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
-                    TicketId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    IdTicket = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreacionUsuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
@@ -130,8 +134,8 @@ namespace Api.Persistencia.Migraciones
                 {
                     table.PrimaryKey("PK_Comentario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comentario_Ticket_TicketId",
-                        column: x => x.TicketId,
+                        name: "FK_Comentario_Ticket_IdTicket",
+                        column: x => x.IdTicket,
                         principalTable: "Ticket",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -142,10 +146,19 @@ namespace Api.Persistencia.Migraciones
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
+            migrationBuilder.InsertData(
+                table: "Usuario",
+                columns: new[] { "Id", "CreacionUsuario", "Email", "FechaCreacion", "Nombre", "Password" },
+                values: new object[,]
+                {
+                    { new Guid("a87bc8d6-0e8c-4a85-ba03-799059edd8d0"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6091), "leon", "1234" },
+                    { new Guid("abff9683-eaac-4a9a-80ce-f81f7aba2aca"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6076), "juan", "1234" }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_Comentario_TicketId",
+                name: "IX_Comentario_IdTicket",
                 table: "Comentario",
-                column: "TicketId");
+                column: "IdTicket");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comentario_UsuarioId",
@@ -153,9 +166,9 @@ namespace Api.Persistencia.Migraciones
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProyectoUsuario_UsuariosId",
+                name: "IX_ProyectoUsuario_IdUsuario",
                 table: "ProyectoUsuario",
-                column: "UsuariosId");
+                column: "IdUsuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ticket_ProyectoId",

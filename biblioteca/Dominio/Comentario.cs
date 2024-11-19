@@ -13,7 +13,6 @@ public class Comentario: Auditoria
     [ForeignKey("Usuario")]
     public Guid Usuario  {get; set; }
 
-    
     [Required]
     [StringLength(50)]
     public required string Contenido {get; set; }

@@ -11,12 +11,11 @@ public class Proyecto : Auditoria
     [Required]
     [StringLength(50)]
     public required string Nombre { get; set; }
-    
-
     [Required]
     [StringLength(50)]
     public required string Descripcion { get; set; }
+    [ForeignKey("IdProyecto")]
     public List<Usuario>? Usuarios { get; set; } = [];
-
+   
     public List<Ticket>? Tickets { get; set; } = [];
 }

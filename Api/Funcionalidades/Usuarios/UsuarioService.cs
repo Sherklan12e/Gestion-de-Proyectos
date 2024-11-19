@@ -47,7 +47,7 @@ public class UsuarioService : IUsuarioService
             .Include(u => u.ProyectoAsignados)
             .Include(u => u.ComentariosUsuario)
             .Include(u => u.TicketsAsignados)
-                .ThenInclude(t => t.Actividad) // Include comments related to each ticket
+                .ThenInclude(t => t.Actividad)
             .AsEnumerable()
             .Select(u => new UsuarioQueryDto
             {
@@ -55,19 +55,16 @@ public class UsuarioService : IUsuarioService
                 Nombre = u.Nombre,
                 Email = u.Email,
                 Password = u.Password,
-                FechaCreacion = u.FechaCreacion,
                 ProyectoAsignados = (u.ProyectoAsignados ?? new List<Proyecto>()).Select(p => new ProyectoQueryDto
                 {
                     Id = p.Id,
                     Nombre = p.Nombre,
                     Descripcion = p.Descripcion,
-                    FechaCreacion = p.FechaCreacion
                 }).ToList(),
                 ComentariosUsuario = (u.ComentariosUsuario ?? new List<Comentario>()).Select(c => new ComentarioQueryDto
                 {
                     Id = c.Id,
                     Contenido = c.Contenido,
-                    FechaCreacion = c.FechaCreacion,
                     UsuarioId = c.Usuario,
                     TicketId = c.Ticket
                 }).ToList(),
@@ -77,7 +74,6 @@ public class UsuarioService : IUsuarioService
                     Nombre = t.Nombre,
                     Descripcion = t.Descripcion,
                     Estado = t.Estado,
-                    FechaCreacion = t.FechaInicio,
                     FechaInicio = t.FechaInicio,
                     FechaFin = t.FechaFin,
                     Usuario = t.Usuario,
@@ -149,19 +145,16 @@ public class UsuarioService : IUsuarioService
         Nombre = usuario.Nombre,
         Email = usuario.Email,
         Password = usuario.Password,
-        FechaCreacion = usuario.FechaCreacion,
         ProyectoAsignados = (usuario.ProyectoAsignados ?? new List<Proyecto>()).Select(p => new ProyectoQueryDto
         {
             Id = p.Id,
             Nombre = p.Nombre,
             Descripcion = p.Descripcion,
-            FechaCreacion = p.FechaCreacion
         }).ToList(),
         ComentariosUsuario = (usuario.ComentariosUsuario ?? new List<Comentario>()).Select(c => new ComentarioQueryDto
         {
             Id = c.Id,
             Contenido = c.Contenido,
-            FechaCreacion = c.FechaCreacion,
             UsuarioId = c.Usuario,
             TicketId = c.Ticket
         }).ToList(),
@@ -171,7 +164,6 @@ public class UsuarioService : IUsuarioService
             Nombre = t.Nombre,
             Descripcion = t.Descripcion,
             Estado = t.Estado,
-            FechaCreacion = t.FechaInicio,
             FechaInicio = t.FechaInicio,
             FechaFin = t.FechaFin,
             Usuario = t.Usuario,
@@ -179,7 +171,6 @@ public class UsuarioService : IUsuarioService
             {
                 Id = a.Id,
                 Contenido = a.Contenido,
-                FechaCreacion = a.FechaCreacion,
                 UsuarioId = a.Usuario,
                 TicketId = a.Ticket
             }).ToList()
