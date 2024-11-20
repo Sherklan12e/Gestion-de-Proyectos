@@ -29,14 +29,21 @@ public class UsuarioService : IUsuarioService
         this.context = context;
     }
 
+    
+
     public bool ValidarUsuario(string email, string password)
     {
-        
-        var usuario = context.Usuarios
-            .FirstOrDefault(u => u.Email == email && u.Password == password);
+        var usuario = context.Usuarios.FirstOrDefault(u => u.Email == email);
 
-        return usuario != null;
+        if (usuario == null)
+        {
+            return false;
+        }
+        bool isPasswordValid = BCrypt.Verify(password, usuario.Password);
+
+        return isPasswordValid;
     }
+
     public List<UsuarioQueryDto> ObtenerUsuarios()
     {
         return context.Usuarios

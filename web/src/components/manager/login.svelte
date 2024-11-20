@@ -1,10 +1,19 @@
 <script>
+  import { onMount } from 'svelte';
   import { navigate } from 'svelte-routing';
+  import { auth } from './authStore';
   
   let email = "";
   let password = "";
   let error = "";
   let loading = false;
+
+  // Verificar si ya está logueado al cargar el componente
+  onMount(() => {
+    if (auth.checkAuth()) {
+      navigate('/projects');
+    }
+  });
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -12,30 +21,28 @@
     error = "";
 
     try {
-      const response = await fetch('https://localhost:7777/api/login', {
+      const loginData = {
+        email: email,
+        password: password
+      };
+
+      const response = await fetch('http://localhost:5180/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email,
-          password,
-          nombre: email, // Requerido por el DTO pero no necesario para login
-          creacionUsuario: '00000000-0000-0000-0000-000000000000' // Valor por defecto
-        })
+        body: JSON.stringify(loginData)
       });
 
-      if (!response.ok) {
+      const result = await response.json();
+
+      if (result === true) {
+        // Guardar estado de autenticación
+        auth.login({ email }); // Puedes guardar más datos del usuario si los necesitas
+        navigate('/projects');
+      } else {
         throw new Error('Credenciales incorrectas');
       }
-
-      const userData = await response.json();
-      
-      // Guardar datos del usuario en localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      // Redireccionar al dashboard o página principal
-      navigate('/projects');
       
     } catch (err) {
       console.error('Error en login:', err);
@@ -79,6 +86,14 @@
             class="appearance-none rounded-lg relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             placeholder="Contraseña"
           />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="text-sm">
+          <a href="/register" class="font-medium text-blue-600 hover:text-blue-500">
+            ¿No tienes cuenta? Regístrate
+          </a>
         </div>
       </div>
 

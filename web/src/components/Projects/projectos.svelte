@@ -1,21 +1,33 @@
 <script>
-  let projects = [
-    {
-      id: 1,
-      name: 'Proyecto Ejemplo',
-      description: 'Descripción del proyecto',
-      status: 'in-progress',
-      progress: 65
+  import { onMount } from 'svelte';
+  import { auth } from '../manager/authStore';
+
+  let projects = [];
+
+  onMount(async () => {
+    try {
+      const response = await fetch('http://localhost:5180/api/proyectos');
+      const allProjects = await response.json();
+      
+      // Filtra los proyectos donde el usuario actual está asignado
+      projects = allProjects.filter(project => 
+        project.usuarios.some(u => u.id === $user.id)
+      );
+    } catch (error) {
+      console.error('Error al cargar proyectos:', error);
     }
-    // Añade más proyectos según necesites
-  ];
+  });
 
   function handleProjectClick(id) {
-    // Implementa la navegación al detalle del proyecto
-    console.log('Ver proyecto:', id);
+    window.location.href = `/projects/${id}`;
+  }
+
+  function handleEdit(id) {
+    window.location.href = `/projects/${id}/edit`;
   }
 </script>
 
+`
 <div class="max-w-6xl mx-auto p-6">
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-2xl font-bold">Proyectos</h2>
@@ -35,7 +47,7 @@
       >
         <h3 class="text-xl font-semibold mb-2">{project.name}</h3>
         <p class="text-gray-600 mb-4">{project.description}</p>
-        
+
         <div class="space-y-2">
           <div class="flex justify-between text-sm">
             <span>Progreso</span>
@@ -47,16 +59,16 @@
               style="width: {project.progress}%"
             ></div>
           </div>
-          
+
           <div class="flex justify-between items-center mt-4">
             <span
               class="px-2 py-1 text-sm rounded-full"
-              class:bg-yellow-100={project.status === 'in-progress'}
-              class:text-yellow-800={project.status === 'in-progress'}
+              class:bg-yellow-100={project.status === "in-progress"}
+              class:text-yellow-800={project.status === "in-progress"}
             >
               {project.status}
             </span>
-            
+
             <div class="flex space-x-2">
               <button
                 class="p-2 text-gray-600 hover:text-blue-600"
@@ -71,3 +83,4 @@
     {/each}
   </div>
 </div>
+`

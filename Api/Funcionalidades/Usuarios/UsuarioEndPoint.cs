@@ -18,13 +18,7 @@ public static class UsuarioEndpoints
 
             return Results.Ok(usuario);
         });
-        // app.MapGet("/{id}", async (Guid id, IUsuarioService usuarioService) =>
-        // {
-        //     var usuario = usuarioService.ObtenerUsuarioPorId(id);
-        //     if (usuario == null)
-        //         return Results.NotFound("Usuario no encontrado");
-        //     return Results.Ok(usuario);
-        // });
+       
         app.MapGet("/{id}", async (Guid id,IUsuarioService usuarioService) => {
             var usuario = usuarioService.TraerUsuario(id);
             if (usuario == null){
