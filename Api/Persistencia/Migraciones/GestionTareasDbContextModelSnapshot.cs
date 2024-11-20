@@ -188,8 +188,8 @@ namespace Api.Persistencia.Migraciones
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.HasKey("Id");
 
@@ -198,19 +198,19 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("abff9683-eaac-4a9a-80ce-f81f7aba2aca"),
+                            Id = new Guid("03f20805-f9b1-4b16-bb7e-f454bc3c2722"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6076),
+                            FechaCreacion = new DateTime(2024, 11, 19, 20, 0, 44, 586, DateTimeKind.Local).AddTicks(7371),
                             Nombre = "juan",
                             Password = "1234"
                         },
                         new
                         {
-                            Id = new Guid("a87bc8d6-0e8c-4a85-ba03-799059edd8d0"),
+                            Id = new Guid("7adccb6c-1681-417c-a2b3-2e902294fe40"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 12, 10, 36, 44, 103, DateTimeKind.Local).AddTicks(6091),
+                            FechaCreacion = new DateTime(2024, 11, 19, 20, 0, 44, 586, DateTimeKind.Local).AddTicks(7383),
                             Nombre = "leon",
                             Password = "1234"
                         });

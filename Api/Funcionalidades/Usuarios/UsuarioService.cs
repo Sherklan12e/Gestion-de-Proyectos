@@ -3,9 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Api.Funcionalidades.Proyectos;
 using Api.Funcionalidades.Comentarios;
 using Api.Funcionalidades.Tickets;
+
 using biblioteca.Dominio;
 using Microsoft.AspNetCore.Components.Web;
+
 namespace Api.Funcionalidades.Usuarios;
+using BCrypt;
+using BCrypt.Net;
 public interface IUsuarioService
 {
     List<UsuarioQueryDto> ObtenerUsuarios();
@@ -27,8 +31,10 @@ public class UsuarioService : IUsuarioService
 
     UsuarioQueryDto? IUsuarioService.AutenticarUsuario(string email, string password)
     {
-        var usuario = context.Usuarios.FirstOrDefault(u => u.Email == email && u.Password == password);
-        if (usuario == null)
+        var usuario = context.Usuarios
+            .FirstOrDefault(u => u.Email == email);
+
+        if (usuario == null || !BCrypt.Verify(password, usuario.Password))
             return null;
 
         return new UsuarioQueryDto
@@ -36,9 +42,8 @@ public class UsuarioService : IUsuarioService
             Id = usuario.Id,
             Nombre = usuario.Nombre,
             Email = usuario.Email,
-            Password = usuario.Password,
+            Password =usuario.Password,
             FechaCreacion = usuario.FechaCreacion,
-            // Agrega otros campos que necesites
         };
     }
     public List<UsuarioQueryDto> ObtenerUsuarios()
@@ -55,6 +60,7 @@ public class UsuarioService : IUsuarioService
                 Nombre = u.Nombre,
                 Email = u.Email,
                 Password = u.Password,
+                CreacionUsuario = u.CreacionUsuario != Guid.Empty ? u.CreacionUsuario : u.Id,
                 ProyectoAsignados = (u.ProyectoAsignados ?? new List<Proyecto>()).Select(p => new ProyectoQueryDto
                 {
                     Id = p.Id,
@@ -90,7 +96,7 @@ public class UsuarioService : IUsuarioService
         {
             Nombre = usuarioDto.Nombre,
             Email = usuarioDto.Email,
-            Password = usuarioDto.Password,
+            Password = BCrypt.HashPassword(usuarioDto.Password),
             CreacionUsuario = usuarioDto.CreacionUsuario,
             FechaCreacion = DateTime.Now
         };
@@ -107,7 +113,11 @@ public class UsuarioService : IUsuarioService
 
         usuario.Nombre = usuarioDto.Nombre;
         usuario.Email = usuarioDto.Email;
-        usuario.Password = usuarioDto.Password;
+        
+        if (!string.IsNullOrEmpty(usuarioDto.Password))
+        {
+            usuario.Password = BCrypt.HashPassword(usuarioDto.Password);
+        }
 
         context.SaveChanges();
     }

@@ -12,7 +12,7 @@ public class Usuario : Auditoria
     [StringLength(24)]
     public required string Nombre {get;set;}
     [Required]
-    [StringLength(50)]
+    [StringLength(100)]
     public required string Password{get;set;}
     [Required]
     [StringLength(50)]
