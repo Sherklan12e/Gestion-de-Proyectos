@@ -198,21 +198,21 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("03f20805-f9b1-4b16-bb7e-f454bc3c2722"),
+                            Id = new Guid("d4b90a4b-bc87-4513-9fdf-2a8c99dd9a3a"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 19, 20, 0, 44, 586, DateTimeKind.Local).AddTicks(7371),
+                            FechaCreacion = new DateTime(2024, 11, 20, 8, 43, 52, 12, DateTimeKind.Local).AddTicks(9507),
                             Nombre = "juan",
-                            Password = "1234"
+                            Password = "$2a$11$r8z/DQDCEmUuetns1RpCWOSr32WmebOV4zk1DKlMAd1lgwjc82Oa2"
                         },
                         new
                         {
-                            Id = new Guid("7adccb6c-1681-417c-a2b3-2e902294fe40"),
+                            Id = new Guid("803e0e3f-2b9a-4ee8-aac0-3199b1f6bcfc"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 19, 20, 0, 44, 586, DateTimeKind.Local).AddTicks(7383),
+                            FechaCreacion = new DateTime(2024, 11, 20, 8, 43, 52, 145, DateTimeKind.Local).AddTicks(618),
                             Nombre = "leon",
-                            Password = "1234"
+                            Password = "$2a$11$MBREkMvmuNiwXudnyuU0nOMUEZstczAI37Ot54hU53ahng5.h.GJS"
                         });
                 });
 

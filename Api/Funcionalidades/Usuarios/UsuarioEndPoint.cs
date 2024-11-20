@@ -10,9 +10,9 @@ public static class UsuarioEndpoints
         {
             return Results.Ok(usuarioService.ObtenerUsuarios());
         });
-        app.MapPost("/login", async (IUsuarioService usuarioService, UsuarioCommandDto usuarioDto) =>
+        app.MapPost("/login", async (IUsuarioService usuarioService, LoginCommandDto  loginUser) =>
         {
-            var usuario = usuarioService.AutenticarUsuario(usuarioDto.Email, usuarioDto.Password);
+            var usuario = usuarioService.ValidarUsuario(loginUser.Email, loginUser.Password);
             if (usuario == null)
                 return Results.NotFound("Credenciales incorrectas");
 

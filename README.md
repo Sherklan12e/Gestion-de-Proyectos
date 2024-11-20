@@ -15,3 +15,4 @@ falat
 que el comentario se agregue al crearse
 eliminar algunos idusuairo
 solo actualiza el usuario que hizo el ticket 
+el gmail no se repite

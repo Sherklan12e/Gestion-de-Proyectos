@@ -17,7 +17,7 @@ public interface IUsuarioService
     void CrearUsuario(UsuarioCommandDto usuarioDto);
     void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
     void EliminarUsuario(Guid idUsuario);
-    UsuarioQueryDto? AutenticarUsuario(string email, string password);
+    bool ValidarUsuario(string email, string password);
     UsuarioQueryDto TraerUsuario(Guid idUsuario);
 }
 public class UsuarioService : IUsuarioService
@@ -29,22 +29,13 @@ public class UsuarioService : IUsuarioService
         this.context = context;
     }
 
-    UsuarioQueryDto? IUsuarioService.AutenticarUsuario(string email, string password)
+    public bool ValidarUsuario(string email, string password)
     {
+        
         var usuario = context.Usuarios
-            .FirstOrDefault(u => u.Email == email);
+            .FirstOrDefault(u => u.Email == email && u.Password == password);
 
-        if (usuario == null || !BCrypt.Verify(password, usuario.Password))
-            return null;
-
-        return new UsuarioQueryDto
-        {
-            Id = usuario.Id,
-            Nombre = usuario.Nombre,
-            Email = usuario.Email,
-            Password =usuario.Password,
-            FechaCreacion = usuario.FechaCreacion,
-        };
+        return usuario != null;
     }
     public List<UsuarioQueryDto> ObtenerUsuarios()
     {

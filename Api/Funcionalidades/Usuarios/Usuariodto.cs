@@ -19,3 +19,9 @@ public class UsuarioCommandDto
     public required string Email { get; set; }
     public Guid CreacionUsuario {get;set;}
 }
+
+public class LoginCommandDto
+{
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+}
