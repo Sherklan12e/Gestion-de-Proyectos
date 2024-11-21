@@ -100,6 +100,11 @@ public class UsuarioService : IUsuarioService
         Guard.ValidarEmail(usuarioDto.Email);
         Guard.ValidarStringVacio(usuarioDto.Password, "Contraseña");
         Guard.ValidarLongitudMinima(usuarioDto.Password, 6, "Contraseña");
+        var existeEmail = context.Usuarios.Any(u => u.Email == usuarioDto.Email);
+        if (existeEmail)
+        {
+            throw new InvalidOperationException("Ya existe un usuario con este correo electrónico");
+        }
 
         var usuario = new Usuario
         {
@@ -139,69 +144,27 @@ public class UsuarioService : IUsuarioService
 
     public void EliminarUsuario(Guid idUsuario)
     {
+        Guard.ValidarGuid(idUsuario, "ID de usuario");
         var usuario = context.Usuarios
-            .Include(u => u.ComentariosUsuario)
-            .Include(u => u.TicketsAsignados)
-                .ThenInclude(t => t.Actividad)
             .Include(u => u.ProyectoAsignados)
-                .ThenInclude(p => p.Tickets)
-                    .ThenInclude(t => t.Actividad)
             .FirstOrDefault(u => u.Id == idUsuario);
-        var actividad = context.Comentarios
-            .Include(u => u.CreacionUsuario)
-            .FirstOrDefault(u => u.CreacionUsuario == idUsuario);
+        var comentarios = context.Comentarios
+            
+            .FirstOrDefault(c => c.CreacionUsuario == idUsuario);
+        
+        Guard.ValidarNull(usuario,"usuario ");
+        Guard.ValidarNull(comentarios, "comentarios");
+        
+        context.Comentarios.Remove(comentarios);
+        var proyectosCreados = context.Proyectos
+            .Where(p => p.CreacionUsuario == idUsuario)
+            .ToList();
 
-
-
-        if (usuario == null)
-            throw new KeyNotFoundException("Usuario no encontrado");
-
-        if (actividad.CreacionUsuario != null ){
-            context.Comentarios.Remove(actividad);
-        }
-        // 1. Eliminar comentarios del usuario
-        if (usuario.ComentariosUsuario != null)
+        if (proyectosCreados.Any())
         {
-            context.Comentarios.RemoveRange(usuario.ComentariosUsuario);
+            context.Proyectos.RemoveRange(proyectosCreados);
         }
 
-        // 2. Eliminar comentarios y tickets asignados al usuario
-        if (usuario.TicketsAsignados != null)
-        {
-            foreach (var ticket in usuario.TicketsAsignados)
-            {
-                if (ticket.Actividad != null)
-                {
-                    context.Comentarios.RemoveRange(ticket.Actividad);
-                }
-            }
-            context.Tickets.RemoveRange(usuario.TicketsAsignados);
-        }
-
-        // 3. Eliminar proyectos donde el usuario es el creador
-        if (usuario.ProyectoAsignados != null)
-        {
-            foreach (var proyecto in usuario.ProyectoAsignados.Where(p => p.CreacionUsuario == idUsuario))
-            {
-                // Eliminar comentarios de los tickets del proyecto
-                if (proyecto.Tickets != null)
-                {
-                    foreach (var ticket in proyecto.Tickets)
-                    {
-                        if (ticket.Actividad != null)
-                        {
-                            context.Comentarios.RemoveRange(ticket.Actividad);
-                        }
-                    }
-                    // Eliminar tickets del proyecto
-                    context.Tickets.RemoveRange(proyecto.Tickets);
-                }
-                // Eliminar el proyecto
-                context.Proyectos.Remove(proyecto);
-            }
-        }
-
-        // 4. Finalmente eliminar el usuario
         context.Usuarios.Remove(usuario);
         context.SaveChanges();
     }
