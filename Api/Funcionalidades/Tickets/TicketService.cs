@@ -19,6 +19,7 @@ public interface ITicketService
 public class TicketService : ITicketService
 {
     private readonly GestionTareasDbContext context;
+    private DateTime fechaInicioGlobal;
 
     public TicketService(GestionTareasDbContext context)
     {
@@ -28,7 +29,7 @@ public class TicketService : ITicketService
     public List<TicketQueryDto> ObtenerTickets()
     {
         return context.Tickets
-            .Include(t => t.Actividad)  // Asegúrate de incluir 'Actividad' para cargar los comentarios
+            .Include(t => t.Actividad)
             .Select(t => new TicketQueryDto
             {
                 Id = t.Id,
@@ -38,7 +39,7 @@ public class TicketService : ITicketService
                 Usuario = t.Usuario,
                 UsuarioAsignadoId = t.Usuario,
                 ProyectoId = t.Proyecto,
-                FechaInicio = t.Estado.ToLower() == "abierto" ? null : t.FechaInicio,
+                FechaInicio = t.Estado.ToLower() == "abierto" ? null :  t.FechaInicio,
                 FechaFin = (t.Estado.ToLower() == "cerrado" || t.Estado.ToLower() == "completado" ) ? t.FechaFin : null,
                 FechaCreacion = t.FechaCreacion,
                 Actividad = t.Actividad.Select(c => new ComentarioQueryDto
@@ -126,8 +127,11 @@ public class TicketService : ITicketService
 
         ticket.Nombre = ticketDto.Nombre;
         ticket.Descripcion = ticketDto.Descripcion;
-        if (ticketDto.Estado != ticketDto.Estado){
-            ticket.FechaInicio = DateTime.Now;
+        if (ticket.Estado != ticketDto.Estado){
+            if (ticket.Estado.ToLower() == "abierto" )
+            {
+                ticket.FechaInicio = DateTime.Now;
+            }
         }
         ticket.Estado = ticketDto.Estado;
 
@@ -162,10 +166,10 @@ public class TicketService : ITicketService
         // Si el estado es diferente, actualiza las fechas correspondientes
         if (ticket.Estado != nuevoEstado)
         {
-            // Si es la primera vez que cambia de estado, establece la fecha de inicio
-            if (ticket.FechaInicio == null)
-            {
+            if (ticket.Estado.ToLower() == "abierto")
+            {   
                 ticket.FechaInicio = DateTime.Now;
+                fechaInicioGlobal = (DateTime)ticket.FechaInicio;
             }
 
             // Si el nuevo estado es "Cerrado" o "Completado", establece la fecha fin

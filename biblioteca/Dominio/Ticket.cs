@@ -22,10 +22,11 @@ public class Ticket : Auditoria
     [Required]
     [StringLength(40)]
     public string Estado { get; set; }= "Abierto";
-    [Timestamp]
+   
     public DateTime? FechaInicio { get; set; }
-    [Timestamp]
+   
     public DateTime? FechaFin { get; set; }
+    
     [ForeignKey("IdTicket")]
     public List<Comentario> Actividad { get; set; } = [];
 
