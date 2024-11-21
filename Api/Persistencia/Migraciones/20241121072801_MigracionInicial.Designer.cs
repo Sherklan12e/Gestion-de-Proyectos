@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Persistencia.Migraciones
 {
     [DbContext(typeof(GestionTareasDbContext))]
-    [Migration("20241121061702_MigracionInicial")]
+    [Migration("20241121072801_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -192,21 +192,21 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d7d0e1dd-4756-47b6-8754-d14a4af3041b"),
+                            Id = new Guid("d441ffea-1ceb-4826-a20f-c0507593ad44"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 21, 3, 17, 2, 183, DateTimeKind.Local).AddTicks(3172),
+                            FechaCreacion = new DateTime(2024, 11, 21, 4, 28, 0, 934, DateTimeKind.Local).AddTicks(8136),
                             Nombre = "juan",
-                            Password = "$2a$11$X8wB23fEQ3ghzn/6AIkRD.EQHR8BDvGq2MFqtvqSTjMfVfjglLp4e"
+                            Password = "$2a$11$KurTyx38SbovHxT2HytVIe9jN7Pd039wM4qJ6Lhyg.QD.tcDRv/yW"
                         },
                         new
                         {
-                            Id = new Guid("20202bda-b860-4054-beb8-20b797d8ad20"),
+                            Id = new Guid("d6d72fea-75cb-4739-adf1-74d4f2cfce0e"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 21, 3, 17, 2, 327, DateTimeKind.Local).AddTicks(1159),
+                            FechaCreacion = new DateTime(2024, 11, 21, 4, 28, 1, 75, DateTimeKind.Local).AddTicks(6095),
                             Nombre = "leon",
-                            Password = "$2a$11$w01JlHceU77PZwKblgAGqeF9vzP.8UjQRzSvXz5FNxSiMvAwg0uUm"
+                            Password = "$2a$11$NqNFR9rkbz6Wv7kdgfV0fO3NqM4xvnKN1hRfnhKYPwK.dujDP8a.a"
                         });
                 });
 
