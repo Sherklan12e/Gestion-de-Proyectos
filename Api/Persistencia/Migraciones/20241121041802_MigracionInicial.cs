@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Api.Persistencia.Migraciones
 {
     /// <inheritdoc />
-    public partial class UnNuevoCambio : Migration
+    public partial class MigracionInicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -124,7 +124,6 @@ namespace Api.Persistencia.Migraciones
                     Usuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Contenido = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Fecha = table.Column<DateTime>(type: "datetime(6)", rowVersion: true, nullable: false),
                     IdTicket = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreacionUsuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
@@ -151,8 +150,8 @@ namespace Api.Persistencia.Migraciones
                 columns: new[] { "Id", "CreacionUsuario", "Email", "FechaCreacion", "Nombre", "Password" },
                 values: new object[,]
                 {
-                    { new Guid("803e0e3f-2b9a-4ee8-aac0-3199b1f6bcfc"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 20, 8, 43, 52, 145, DateTimeKind.Local).AddTicks(618), "leon", "$2a$11$MBREkMvmuNiwXudnyuU0nOMUEZstczAI37Ot54hU53ahng5.h.GJS" },
-                    { new Guid("d4b90a4b-bc87-4513-9fdf-2a8c99dd9a3a"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 20, 8, 43, 52, 12, DateTimeKind.Local).AddTicks(9507), "juan", "$2a$11$r8z/DQDCEmUuetns1RpCWOSr32WmebOV4zk1DKlMAd1lgwjc82Oa2" }
+                    { new Guid("c97748d9-449a-4c89-9878-7b4a6ae477bb"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 21, 1, 18, 1, 606, DateTimeKind.Local).AddTicks(9086), "leon", "$2a$11$DENqpzvTU/xdR1YSaslICO94ozqtNFnqZV5Cf0H6z1AJEs.6MTyfa" },
+                    { new Guid("f9910dce-1050-4874-a0f8-5dd832a9fc5f"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 21, 1, 18, 1, 466, DateTimeKind.Local).AddTicks(9073), "juan", "$2a$11$isPpM9mBBZjLvhHw1almkurQ9p0Dxm4sdLgvjjJ2G4wfnhXk0yXXu" }
                 });
 
             migrationBuilder.CreateIndex(

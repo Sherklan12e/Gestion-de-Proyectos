@@ -1,25 +1,29 @@
-using Api.Persistencia;
-using Microsoft.EntityFrameworkCore;
+// Funcionalidades
 using Api.Funcionalidades.Proyectos;
 using Api.Funcionalidades.Comentarios;
 using Api.Funcionalidades.Tickets;
-
 using biblioteca.Dominio;
-using Microsoft.AspNetCore.Components.Web;
+using Api.Persistencia;
+
+// Librerias
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Funcionalidades.Usuarios;
 using BCrypt;
 using BCrypt.Net;
+using biblioteca.Validacion;
+
 public interface IUsuarioService
 {
     List<UsuarioQueryDto> ObtenerUsuarios();
-    // UsuarioQueryDto? ObtenerUsuarioPorId(Guid idUsuario);
     void CrearUsuario(UsuarioCommandDto usuarioDto);
     void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto);
     void EliminarUsuario(Guid idUsuario);
     bool ValidarUsuario(string email, string password);
     UsuarioQueryDto TraerUsuario(Guid idUsuario);
 }
+
+
 public class UsuarioService : IUsuarioService
 {
     private readonly GestionTareasDbContext context;
@@ -69,7 +73,7 @@ public class UsuarioService : IUsuarioService
                 {
                     Id = c.Id,
                     Contenido = c.Contenido,
-                    UsuarioId = c.Usuario,
+                    CreacionUsuario = c.Usuario,
                     TicketId = c.Ticket
                 }).ToList(),
                 TicketsAsignados = (u.TicketsAsignados ?? new List<Ticket>()).Select(t => new TicketQueryDto
@@ -90,6 +94,13 @@ public class UsuarioService : IUsuarioService
 
     public void CrearUsuario(UsuarioCommandDto usuarioDto)
     {
+        Guard.ValidarNull(usuarioDto, "Usuario");
+        Guard.ValidarStringVacio(usuarioDto.Nombre, "Nombre");
+        Guard.ValidarStringVacio(usuarioDto.Email, "Email");
+        Guard.ValidarEmail(usuarioDto.Email);
+        Guard.ValidarStringVacio(usuarioDto.Password, "Contraseña");
+        Guard.ValidarLongitudMinima(usuarioDto.Password, 6, "Contraseña");
+
         var usuario = new Usuario
         {
             Nombre = usuarioDto.Nombre,
@@ -105,6 +116,12 @@ public class UsuarioService : IUsuarioService
 
     public void ActualizarUsuario(Guid idUsuario, UsuarioCommandDto usuarioDto)
     {
+        Guard.ValidarGuid(idUsuario, "ID de usuario");
+        Guard.ValidarNull(usuarioDto, "Usuario");
+        Guard.ValidarStringVacio(usuarioDto.Nombre, "Nombre");
+        Guard.ValidarStringVacio(usuarioDto.Email, "Email");
+        Guard.ValidarEmail(usuarioDto.Email);
+
         var usuario = context.Usuarios.Find(idUsuario);
         if (usuario == null)
             throw new KeyNotFoundException("Usuario no encontrado");
@@ -163,7 +180,7 @@ public class UsuarioService : IUsuarioService
         {
             Id = c.Id,
             Contenido = c.Contenido,
-            UsuarioId = c.Usuario,
+            CreacionUsuario = c.Usuario,
             TicketId = c.Ticket
         }).ToList(),
         TicketsAsignados = (usuario.TicketsAsignados ?? new List<Ticket>()).Select(t => new TicketQueryDto
@@ -179,7 +196,7 @@ public class UsuarioService : IUsuarioService
             {
                 Id = a.Id,
                 Contenido = a.Contenido,
-                UsuarioId = a.Usuario,
+                CreacionUsuario = a.Usuario,
                 TicketId = a.Ticket
             }).ToList()
         }).ToList()

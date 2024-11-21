@@ -31,7 +31,18 @@ public static class TicketEndpoints
                 return Results.NotFound(ex.Message);
             }
         });
-
+        app.MapPut("/ticket/actualizarestado/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket, [FromBody] ActualizarEstadoTicketDto dto) =>
+        {   
+            try
+            {
+                ticketService.ActualizarEstadoTicket(idTicket, dto.Estado);
+                return Results.NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
+        });
         app.MapDelete("/ticket/{idTicket}", ([FromServices] ITicketService ticketService, Guid idTicket) =>
         {
             try

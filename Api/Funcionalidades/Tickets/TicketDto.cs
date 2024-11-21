@@ -28,3 +28,9 @@ public class TicketCommandDto
 
 
 }
+
+public class ActualizarEstadoTicketDto
+{
+    [Required]
+    public required string Estado { get; set; }
+}

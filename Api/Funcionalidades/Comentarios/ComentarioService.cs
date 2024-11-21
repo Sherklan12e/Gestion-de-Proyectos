@@ -1,8 +1,11 @@
-using Microsoft.EntityFrameworkCore;
-using biblioteca.Dominio;
+// Funcionalidades 
 using Api.Funcionalidades.Usuarios;
 using Api.Persistencia;
 using biblioteca.Dominio;
+using biblioteca.Validacion;
+
+using Microsoft.EntityFrameworkCore;
+
 namespace Api.Funcionalidades.Comentarios;
 
 public interface IComentarioService
@@ -31,18 +34,24 @@ public class ComentarioService : IComentarioService
                 Id = c.Id,
                 Contenido = c.Contenido,
                 FechaCreacion = c.FechaCreacion,
-                UsuarioId = c.Usuario,
+                CreacionUsuario = c.CreacionUsuario,
                 TicketId = c.Ticket
             }).ToList();
     }
 
     public void CrearComentario(ComentarioCommandDto comentarioDto)
     {
+        Guard.ValidarNull(comentarioDto, "Comentario");
+        Guard.ValidarStringVacio(comentarioDto.Contenido, "Contenido");
+        Guard.ValidarGuid(comentarioDto.CreacionUsuario, "ID de usuario creador");
+        Guard.ValidarGuid(comentarioDto.TicketId, "ID de ticket");
+
         var comentario = new Comentario
         {
             Contenido = comentarioDto.Contenido,
             CreacionUsuario = comentarioDto.CreacionUsuario,
-            FechaCreacion = DateTime.Now,
+            Ticket = comentarioDto.TicketId,
+            FechaCreacion = DateTime.Now
         };
 
         _context.Comentarios.Add(comentario);
@@ -51,6 +60,10 @@ public class ComentarioService : IComentarioService
 
     public void ActualizarComentario(Guid idComentario, ComentarioCommandDto comentarioDto)
     {
+        Guard.ValidarGuid(idComentario, "ID de comentario");
+        Guard.ValidarNull(comentarioDto, "Comentario");
+        Guard.ValidarStringVacio(comentarioDto.Contenido, "Contenido");
+
         var comentario = _context.Comentarios.Find(idComentario);
         if (comentario == null)
             throw new KeyNotFoundException("Comentario no encontrado");

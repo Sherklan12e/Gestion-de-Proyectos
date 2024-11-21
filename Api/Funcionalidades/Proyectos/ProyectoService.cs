@@ -1,9 +1,13 @@
+// Funcionalidades 
 using Api.Persistencia;
 using Api.Funcionalidades.Usuarios;
 using Api.Funcionalidades.Tickets;
 using Api.Funcionalidades.Comentarios;
-using Microsoft.EntityFrameworkCore;
 using biblioteca.Dominio;
+using biblioteca.Validacion;
+
+// Librerias
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Funcionalidades.Proyectos;
 
@@ -16,6 +20,7 @@ public interface IProyectoService
     void EliminarProyecto(Guid idProyecto);
     void AsicnarUsuario(Guid idProyecto, Guid idUsuario);
 }
+
 
 public class ProyectoService : IProyectoService
 {
@@ -66,14 +71,16 @@ public class ProyectoService : IProyectoService
                 Nombre = p.Nombre,
                 Descripcion = p.Descripcion,
                 FechaCreacion = p.FechaCreacion,
+                CreacionUsuario = p.CreacionUsuario,
                 Usuarios = p.Usuarios != null
                     ? p.Usuarios.Select(u => new UsuarioQueryDto
                     {
                         Id = u.Id,
                         Nombre = u.Nombre,
                         Email = u.Email,
-                        Password = u.Password, // Preguntar al profe sobre esto >?
-                        // FechaCreacion = u.FechaCreacion,
+                        Password = u.Password, 
+                        FechaCreacion = u.FechaCreacion,
+                        CreacionUsuario = u.CreacionUsuario
                     }).ToList()
                     : new List<UsuarioQueryDto>(),
 
@@ -96,6 +103,12 @@ public class ProyectoService : IProyectoService
 
     public void CrearProyeto(ProyectoCommandDto proyectoDto)
     {
+        // Validaciones
+        Guard.ValidarNull(proyectoDto, "Proyecto");
+        Guard.ValidarStringVacio(proyectoDto.Nombre, "Nombre");
+        Guard.ValidarStringVacio(proyectoDto.Descripcion, "Descripción");
+        Guard.ValidarGuid(proyectoDto.CreacionUsuario, "ID de usuario creador");
+
         var usuario = _context.Usuarios.SingleOrDefault(user => user.Id == proyectoDto.CreacionUsuario);
         if (usuario is not null)
         {
@@ -118,6 +131,11 @@ public class ProyectoService : IProyectoService
 
     public void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto)
     {
+        Guard.ValidarGuid(idProyecto, "ID de proyecto");
+        Guard.ValidarNull(proyectoDto, "Proyecto");
+        Guard.ValidarStringVacio(proyectoDto.Nombre, "Nombre");
+        Guard.ValidarStringVacio(proyectoDto.Descripcion, "Descripción");
+
         var proyecto = _context.Proyectos.Find(idProyecto);
         if (proyecto == null)
             throw new KeyNotFoundException("Proyecto no encontrado");

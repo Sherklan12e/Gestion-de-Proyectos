@@ -3,6 +3,7 @@ using Api.Funcionalidades.Usuarios;
 using Api.Funcionalidades.Tickets;
 using Api.Persistencia;
 using biblioteca.Dominio;
+using biblioteca.Validacion;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.Funcionalidades.Tickets;
@@ -12,6 +13,7 @@ public interface ITicketService
     void CrearTicket(TicketCommandDto ticketDto);
     void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto);
     void DeleteTicket(Guid idTicket);
+    void ActualizarEstadoTicket(Guid idTicket, string nuevoEstado);
 }
 
 public class TicketService : ITicketService
@@ -26,21 +28,26 @@ public class TicketService : ITicketService
     public List<TicketQueryDto> ObtenerTickets()
     {
         return context.Tickets
-            .Include(t => t.Actividad)  // Solo incluimos 'Actividad' si es una navegación a otra entidad.
+            .Include(t => t.Actividad)  // Asegúrate de incluir 'Actividad' para cargar los comentarios
             .Select(t => new TicketQueryDto
             {
                 Id = t.Id,
                 Nombre = t.Nombre,
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
-                UsuarioAsignadoId = t.Usuario,  // Asignamos directamente la clave foránea.
+                Usuario = t.Usuario,
+                UsuarioAsignadoId = t.Usuario,
+                ProyectoId = t.Proyecto,
+                FechaInicio = t.Estado.ToLower() == "abierto" ? null : t.FechaInicio,
+                FechaFin = (t.Estado.ToLower() == "cerrado" || t.Estado.ToLower() == "completado" ) ? t.FechaFin : null,
+                FechaCreacion = t.FechaCreacion,
                 Actividad = t.Actividad.Select(c => new ComentarioQueryDto
                 {
                     Id = c.Id,
                     Contenido = c.Contenido,
-                    UsuarioId = c.Usuario,  // Asignamos la propiedad correspondiente.
+                    CreacionUsuario = c.Usuario,
                     TicketId = c.Ticket
-                }).ToList()
+                }).ToList(),
             }).ToList();
     }
 
@@ -88,6 +95,7 @@ public class TicketService : ITicketService
             Usuario = ticketDto.UsuarioAsignadoId,
             Proyecto = ticketDto.ProyectoId,
             FechaInicio = null,
+            FechaFin = null,
             FechaCreacion = DateTime.Now,
 
         };
@@ -137,6 +145,42 @@ public class TicketService : ITicketService
 
         context.Comentarios.RemoveRange(ticket.Actividad);
         context.Tickets.Remove(ticket);
+        context.SaveChanges();
+    }
+
+    public void ActualizarEstadoTicket(Guid idTicket, string nuevoEstado)
+    {
+        Guard.ValidarGuid(idTicket, "ID de ticket");
+        Guard.ValidarStringVacio(nuevoEstado, "Estado");
+
+        var ticket = context.Tickets
+            .FirstOrDefault(t => t.Id == idTicket);
+
+        if (ticket == null)
+            throw new KeyNotFoundException("Ticket no encontrado");
+
+        // Si el estado es diferente, actualiza las fechas correspondientes
+        if (ticket.Estado != nuevoEstado)
+        {
+            // Si es la primera vez que cambia de estado, establece la fecha de inicio
+            if (ticket.FechaInicio == null)
+            {
+                ticket.FechaInicio = DateTime.Now;
+            }
+
+            // Si el nuevo estado es "Cerrado" o "Completado", establece la fecha fin
+            if (nuevoEstado.ToLower() == "cerrado" || nuevoEstado.ToLower() == "completado")
+            {
+                ticket.FechaFin = DateTime.Now;
+            }
+            // Si se reabre el ticket (cambia de Cerrado/Completado a otro estado), limpia la fecha fin
+            else if (ticket.FechaFin.HasValue)
+            {
+                ticket.FechaFin = null;
+            }
+        }
+
+        ticket.Estado = nuevoEstado;
         context.SaveChanges();
     }
 }

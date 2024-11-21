@@ -51,11 +51,6 @@ namespace Api.Persistencia.Migraciones
                     b.Property<Guid>("CreacionUsuario")
                         .HasColumnType("char(36)");
 
-                    b.Property<DateTime>("Fecha")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime(6)");
-
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
@@ -198,21 +193,21 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d4b90a4b-bc87-4513-9fdf-2a8c99dd9a3a"),
+                            Id = new Guid("f9910dce-1050-4874-a0f8-5dd832a9fc5f"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 20, 8, 43, 52, 12, DateTimeKind.Local).AddTicks(9507),
+                            FechaCreacion = new DateTime(2024, 11, 21, 1, 18, 1, 466, DateTimeKind.Local).AddTicks(9073),
                             Nombre = "juan",
-                            Password = "$2a$11$r8z/DQDCEmUuetns1RpCWOSr32WmebOV4zk1DKlMAd1lgwjc82Oa2"
+                            Password = "$2a$11$isPpM9mBBZjLvhHw1almkurQ9p0Dxm4sdLgvjjJ2G4wfnhXk0yXXu"
                         },
                         new
                         {
-                            Id = new Guid("803e0e3f-2b9a-4ee8-aac0-3199b1f6bcfc"),
+                            Id = new Guid("c97748d9-449a-4c89-9878-7b4a6ae477bb"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 20, 8, 43, 52, 145, DateTimeKind.Local).AddTicks(618),
+                            FechaCreacion = new DateTime(2024, 11, 21, 1, 18, 1, 606, DateTimeKind.Local).AddTicks(9086),
                             Nombre = "leon",
-                            Password = "$2a$11$MBREkMvmuNiwXudnyuU0nOMUEZstczAI37Ot54hU53ahng5.h.GJS"
+                            Password = "$2a$11$DENqpzvTU/xdR1YSaslICO94ozqtNFnqZV5Cf0H6z1AJEs.6MTyfa"
                         });
                 });
 

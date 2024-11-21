@@ -16,7 +16,6 @@ public class Comentario: Auditoria
     [Required]
     [StringLength(50)]
     public required string Contenido {get; set; }
-    [Timestamp]
-    public DateTime Fecha {get; set; }
+   
     
 }
