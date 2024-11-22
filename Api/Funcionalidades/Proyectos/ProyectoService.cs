@@ -19,6 +19,8 @@ public interface IProyectoService
     void ActualizarProyecto(Guid idProyecto, ProyectoCommandDto proyectoDto);
     void EliminarProyecto(Guid idProyecto);
     void AsicnarUsuario(Guid idProyecto, Guid idUsuario);
+
+    ProyectoQueryDto ProyectoId(Guid idProyecto);
 }
 
 
@@ -50,13 +52,13 @@ public class ProyectoService : IProyectoService
             throw new KeyNotFoundException("Usuario no encontrado");
         }
 
-        // Verificar si el usuario ya está asignado al proyecto
+       
         if (proyecto.Usuarios.Any(u => u.Id == idUsuario))
         {
             throw new InvalidOperationException("El usuario ya está asignado a este proyecto");
         }
 
-        // Agregar usuario a proyecto
+        
         proyecto.Usuarios.Add(usuario);
         _context.SaveChanges();
     }
@@ -103,7 +105,6 @@ public class ProyectoService : IProyectoService
 
     public void CrearProyeto(ProyectoCommandDto proyectoDto)
     {
-        // Validaciones
         Guard.ValidarNull(proyectoDto, "Proyecto");
         Guard.ValidarStringVacio(proyectoDto.Nombre, "Nombre");
         Guard.ValidarStringVacio(proyectoDto.Descripcion, "Descripción");
@@ -168,5 +169,47 @@ public class ProyectoService : IProyectoService
         // Eliminar proyecto
         _context.Proyectos.Remove(proyecto);
         _context.SaveChanges();
+    }
+
+    public ProyectoQueryDto ProyectoId(Guid idProyecto)
+    {
+        var proyecto = _context.Proyectos
+            .Include(p => p.Usuarios)
+            .Include(p => p.Tickets)
+            .FirstOrDefault(p => p.Id == idProyecto);
+
+        if (proyecto == null)
+        {
+            throw new KeyNotFoundException("Proyecto no encontrado");
+        }
+
+        return new ProyectoQueryDto
+        {
+            Id = proyecto.Id,
+            Nombre = proyecto.Nombre,
+            Descripcion = proyecto.Descripcion,
+            FechaCreacion = proyecto.FechaCreacion,
+            CreacionUsuario = proyecto.CreacionUsuario,
+            Usuarios = proyecto.Usuarios?.Select(u => new UsuarioQueryDto
+            {
+                Id = u.Id,
+                Nombre = u.Nombre,
+                Email = u.Email,
+                Password = u.Password,
+                FechaCreacion = u.FechaCreacion,
+                CreacionUsuario = u.CreacionUsuario
+            }).ToList() ?? new List<UsuarioQueryDto>(),
+            Tickets = proyecto.Tickets?.Select(t => new TicketQueryDto
+            {
+                Id = t.Id,
+                Nombre = t.Nombre,
+                Descripcion = t.Descripcion,
+                Estado = t.Estado,
+                FechaCreacion = t.FechaCreacion,
+                FechaInicio = t.FechaInicio,
+                FechaFin = t.FechaFin,
+                UsuarioAsignadoId = t.Usuario
+            }).ToList() ?? new List<TicketQueryDto>()
+        };
     }
 }

@@ -9,6 +9,7 @@
   import Admins from './components/manager/admins.svelte';
   import Navbar from './components/layouts/Navbar.svelte';
   import Footer from './components/layouts/Footer.svelte';
+  import ProjectDetail from './components/Projects/proyectoDetail.svelte';
   export let url = "";
 </script>
 
@@ -33,6 +34,7 @@
     <Route path="/projects/new" component={CreateProject} />
     <Route path="/edit/:id" component={Edit} />
     <Route path="/admins" component={Admins} />
+    <Route path="/projects/:id" component={ProjectDetail} />
   </main>
   <Footer />
 </Router>

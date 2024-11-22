@@ -10,6 +10,18 @@ public static class ProyectoEndpoints
         {
             return Results.Ok(proyectoService.ObtenerProyectos());
         });
+        app.MapGet("/proyectos/{idProyecto}", ([FromServices] IProyectoService proyectoService, Guid idProyecto) =>
+        {   
+            try 
+            {
+                var proyecto = proyectoService.ProyectoId(idProyecto);
+                return Results.Ok(proyecto);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
+        });
         app.MapPost("/proyectos/{idProyecto}/usuario/{idUsuario}", ([FromServices] IProyectoService proyectoService, Guid idProyecto, Guid idUsuario) =>
         {
             
