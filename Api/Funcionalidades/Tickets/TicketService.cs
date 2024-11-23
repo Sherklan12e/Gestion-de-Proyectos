@@ -14,6 +14,8 @@ public interface ITicketService
     void ActualizarTicket(Guid idTicket, TicketCommandDto ticketDto);
     void DeleteTicket(Guid idTicket);
     void ActualizarEstadoTicket(Guid idTicket, string nuevoEstado);
+
+    // TicketQueryDto TraerTicket(Guid Tr)s
 }
 
 public class TicketService : ITicketService

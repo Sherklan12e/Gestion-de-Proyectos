@@ -141,7 +141,10 @@
         {#if project.tickets?.length > 0}
           <ul class="divide-y divide-gray-200">
             {#each project.tickets as ticket}
-              <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+              <li 
+                class="px-4 py-4 sm:px-6 hover:bg-gray-50 cursor-pointer transition-colors"
+                on:click={() => window.location.href = `/tickets/${ticket.id}`}
+              >
                 <div class="flex items-center justify-between">
                   <div class="flex-1">
                     <h3 class="text-lg font-medium">{ticket.nombre}</h3>

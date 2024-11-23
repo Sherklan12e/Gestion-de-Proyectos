@@ -24,9 +24,8 @@
         const matchingUser = users.find(user => user.email === loggedInEmail);
         if (matchingUser) {
           projectData.creacionUsuario = matchingUser.id;
-          console.log('Usuario encontrado:', matchingUser);
+          console.log('Usuario encontrado:', matchingUser.id);
         }
-        console.log('Usuario encontrado:', matchingUser);
       } catch (error) {
         console.error('Error al obtener usuarios:', error);
       }
@@ -48,8 +47,16 @@
         throw new Error('Error al crear el proyecto');
       }
 
-      const result = await response.json();
-      console.log('Proyecto creado:', result);
+      const text = await response.text();
+      if (text) {
+        const result = JSON.parse(text);
+        console.log('Proyecto creado:', result);
+      } else {
+        console.log('Proyecto creado exitosamente');
+      }
+      
+      // Redirigir a la página de proyectos
+      window.location.href = '/projects';
       
     } catch (error) {
       console.error('Error al crear proyecto:', error);

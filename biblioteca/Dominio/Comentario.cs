@@ -14,7 +14,7 @@ public class Comentario: Auditoria
     public Guid Usuario  {get; set; }
 
     [Required]
-    [StringLength(50)]
+    [StringLength(200)]
     public required string Contenido {get; set; }
    
     

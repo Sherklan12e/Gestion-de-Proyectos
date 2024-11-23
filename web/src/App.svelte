@@ -10,6 +10,7 @@
   import Navbar from './components/layouts/Navbar.svelte';
   import Footer from './components/layouts/Footer.svelte';
   import ProjectDetail from './components/Projects/proyectoDetail.svelte';
+  import TicketDetail from './components/Tickets/ticketDetail.svelte';
   export let url = "";
 </script>
 
@@ -35,6 +36,7 @@
     <Route path="/edit/:id" component={Edit} />
     <Route path="/admins" component={Admins} />
     <Route path="/projects/:id" component={ProjectDetail} />
+    <Route path="/tickets/:id" component={TicketDetail} />
   </main>
   <Footer />
 </Router>
