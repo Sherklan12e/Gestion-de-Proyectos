@@ -1,6 +1,8 @@
 <script>
   export let projectId;
   import { onMount } from 'svelte';
+  import 'emoji-picker-element';
+  
   let projectData = {
     nombre: '',
     descripcion: '',
@@ -9,6 +11,22 @@
 
   let loading = true;
   let error = null;
+
+  const MAX_CHARS_DESC = 50;  // Máximo de caracteres permitidos para descripción
+  const MIN_CHARS_DESC = 20;  // Mínimo de caracteres requeridos para descripción
+  const MAX_CHARS_NAME = 40;  // Máximo de caracteres permitidos para nombre
+  let charactersRemaining = MAX_CHARS_DESC;  // Contador de caracteres restantes
+
+  let showEmojiPicker = false;
+  
+  function toggleEmojiPicker() {
+    showEmojiPicker = !showEmojiPicker;
+  }
+
+  function onEmojiSelect(e) {
+    projectData.nombre += e.detail.unicode;
+    showEmojiPicker = false;
+  }
 
   onMount(async () => {
     if (!projectId) return;
@@ -69,6 +87,12 @@
       alert('No se pudo actualizar el proyecto');
     }
   }
+
+  // Función para actualizar el contador
+  function updateCharCount(event) {
+    const length = event.target.value.length;
+    charactersRemaining = MAX_CHARS_DESC - length;
+  }
 </script>
 
 <div class="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
@@ -88,14 +112,36 @@
         <label for="nombre" class="block text-sm font-medium text-gray-700">
           Nombre del Proyecto
         </label>
-        <input 
-          type="text" 
-          id="nombre" 
-          bind:value={projectData.nombre} 
-          required
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Ingrese el nombre del proyecto"
-        />
+        <div class="flex items-center">
+          <input 
+            type="text" 
+            id="nombre" 
+            bind:value={projectData.nombre} 
+            required
+            maxlength={MAX_CHARS_NAME}
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            placeholder="Ingrese el nombre del proyecto"
+          />
+          <button
+            type="button"
+            class="ml-2 p-2 text-gray-500 hover:text-gray-700"
+            on:click={toggleEmojiPicker}
+          >
+            😊
+          </button>
+        </div>
+        
+        {#if showEmojiPicker}
+          <div class="absolute z-10 mt-1">
+            <emoji-picker
+              on:emoji-click={onEmojiSelect}
+            ></emoji-picker>
+          </div>
+        {/if}
+        
+        <div class="text-sm text-gray-500">
+          <span>{projectData.nombre.length}/{MAX_CHARS_NAME} caracteres</span>
+        </div>
       </div>
 
       <div class="space-y-2">
@@ -104,12 +150,21 @@
         </label>
         <textarea 
           id="descripcion" 
-          bind:value={projectData.descripcion} 
+          bind:value={projectData.descripcion}
+          on:input={updateCharCount}
           required
+          maxlength={MAX_CHARS_DESC}
+          minlength={MIN_CHARS_DESC}
           rows="4"
           class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-          placeholder="Describa el proyecto"
+          placeholder="Describa el proyecto (mínimo 20 caracteres)"
         ></textarea>
+        <div class="text-sm text-gray-500 flex justify-between">
+          <span>{projectData.descripcion.length}/{MAX_CHARS_DESC} caracteres</span>
+          {#if projectData.descripcion.length < MIN_CHARS_DESC}
+            <span class="text-red-500">Mínimo {MIN_CHARS_DESC} caracteres requeridos</span>
+          {/if}
+        </div>
       </div>
 
       <div class="flex justify-end space-x-4 pt-4">
@@ -133,5 +188,10 @@
 <style>
   :global(body) {
     background-color: #f9fafb;
+  }
+
+  emoji-picker {
+    --background: white;
+    --category-emoji-size: 1.25rem;
   }
 </style>

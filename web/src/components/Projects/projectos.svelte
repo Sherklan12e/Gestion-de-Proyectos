@@ -106,8 +106,16 @@
           class="relative bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
           on:click={() => handleProjectClick(project.id)}
         >
-          <h3 class="text-xl font-semibold mb-2">{project.nombre}</h3>
-          <p class="text-gray-600 mb-4">{project.descripcion}</p>
+          <h3 
+            class="text-xl font-semibold mb-2 break-words" 
+            title={project.nombre}
+            style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 34ch;"
+          >
+            {project.nombre}
+          </h3>
+          <p class="text-gray-600 mb-4 line-clamp-2" title={project.descripcion}>
+            {project.descripcion}
+          </p>
 
           <div class="space-y-2">
             <!-- Equipo del Proyecto -->

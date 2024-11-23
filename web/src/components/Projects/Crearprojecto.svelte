@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte';
+  import 'emoji-picker-element';
   
   let projectData = {
     nombre: '',
@@ -8,6 +9,17 @@
   };
 
   let loggedInEmail = '';
+  
+  let showEmojiPicker = false;
+  
+  function toggleEmojiPicker() {
+    showEmojiPicker = !showEmojiPicker;
+  }
+
+  function onEmojiSelect(e) {
+    projectData.nombre += e.detail.unicode;
+    showEmojiPicker = false;
+  }
   
   onMount(async () => {
     // Obtener email del usuario logueado desde la cache
@@ -74,14 +86,31 @@
     <h2 class="text-2xl font-bold mb-6">Crear Nuevo Proyecto</h2>
 
     <form on:submit={handleCreateProject} class="space-y-6">
-      <div>
+      <div class="relative">
         <label class="block text-sm font-medium text-gray-700">Nombre del Proyecto</label>
-        <input
-          type="text"
-          bind:value={projectData.nombre}
-          required
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-        />
+        <div class="flex items-center">
+          <input
+            type="text"
+            bind:value={projectData.nombre}
+            required
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          />
+          <button
+            type="button"
+            class="ml-2 p-2 text-gray-500 hover:text-gray-700"
+            on:click={toggleEmojiPicker}
+          >
+            😊
+          </button>
+        </div>
+        
+        {#if showEmojiPicker}
+          <div class="absolute z-10 mt-1">
+            <emoji-picker
+              on:emoji-click={onEmojiSelect}
+            ></emoji-picker>
+          </div>
+        {/if}
       </div>
 
       <div>
@@ -102,3 +131,10 @@
     </form>
   </div>
 </div>
+
+<style>
+  emoji-picker {
+    --background: white;
+    --category-emoji-size: 1.25rem;
+  }
+</style>
