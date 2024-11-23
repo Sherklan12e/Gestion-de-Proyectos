@@ -4,6 +4,7 @@
   let projects = [];
   let loading = true;
   let error = null;
+  let activeDropdown = null;
 
   onMount(async () => {
     try {
@@ -22,7 +23,32 @@
   }
 
   function handleEdit(id) {
-    window.location.href = `/projects/${id}/edit`;
+    if (id) {
+      window.location.href = `/editProject/${id}`;
+    }
+  }
+
+  function toggleDropdown(projectId, event) {
+    event.stopPropagation();
+    activeDropdown = activeDropdown === projectId ? null : projectId;
+  }
+
+  // Cerrar dropdown al hacer click fuera
+  function handleClickOutside(event) {
+    if (!event.target.closest('.dropdown-menu')) {
+      activeDropdown = null;
+    }
+  }
+
+  // Agregar el event listener global
+  if (typeof window !== 'undefined') {
+    window.addEventListener('click', handleClickOutside);
+  }
+
+  function handleDelete(id, event) {
+    event.stopPropagation();
+    // Implementar lógica de eliminación
+    console.log('Eliminar proyecto:', id);
   }
 </script>
 
@@ -55,22 +81,42 @@
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
-          class="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
+          class="relative bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow"
           on:click={() => handleProjectClick(project.id)}
         >
           <h3 class="text-xl font-semibold mb-2">{project.nombre}</h3>
           <p class="text-gray-600 mb-4">{project.descripcion}</p>
 
           <div class="space-y-2">
-            <!-- Miembros del equipo -->
-            <div class="mt-4">
-              <h4 class="text-sm font-medium text-gray-700 mb-2">Equipo:</h4>
-              <div class="flex flex-wrap gap-2">
-                {#each project.usuarios as usuario}
-                  <span class="px-2 py-1 bg-gray-100 rounded-full text-sm">
-                    {usuario.nombre}
-                  </span>
+            <!-- Equipo del Proyecto -->
+            <div class="mt-6">
+              <h4 class="text-sm font-semibold text-gray-900 mb-3">Miembros del Equipo</h4>
+              <div class="flex flex-wrap gap-2 items-center">
+                {#each project.usuarios.slice(0, 5) as usuario}
+                  <div class="flex items-center bg-white border border-gray-200 rounded-full px-3 py-1.5 shadow-sm hover:shadow-md transition-all duration-200">
+                    <!-- Avatar del usuario (puedes reemplazar src con la imagen real del usuario) -->
+                    <div class="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center mr-2">
+                      <span class="text-xs font-medium text-indigo-700">
+                        {usuario.nombre[0].toUpperCase()}
+                      </span>
+                    </div>
+                    <span class="text-sm font-medium text-gray-700">
+                      {usuario.nombre}
+                    </span>
+                  </div>
                 {/each}
+                
+                {#if project.usuarios.length > 5}
+                  <button 
+                    class="flex items-center bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1.5 
+                           hover:bg-indigo-100 transition-colors duration-200 group cursor-pointer"
+                    title="Ver todos los miembros"
+                  >
+                    <span class="text-sm font-medium text-indigo-600">
+                      +{project.usuarios.length - 5} más
+                    </span>
+                  </button>
+                {/if}
               </div>
             </div>
 
@@ -79,13 +125,44 @@
               Creado: {new Date(project.fechaCreacion).toLocaleDateString()}
             </div>
 
-            <div class="flex justify-end mt-4">
-              <button
-                class="p-2 text-gray-600 hover:text-blue-600"
-                on:click|stopPropagation={() => handleEdit(project.id)}
-              >
-                Editar
-              </button>
+            <div class="absolute top-4 right-4">
+              <div class="relative">
+                <button
+                  class="p-1 rounded-full hover:bg-gray-100 transition-colors"
+                  on:click={(e) => toggleDropdown(project.id, e)}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                  </svg>
+                </button>
+                
+                {#if activeDropdown === project.id}
+                  <div 
+                    class="dropdown-menu absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50"
+                  >
+                    <div class="py-1">
+                      <button
+                        class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                        on:click|stopPropagation={() => handleEdit(project.id)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Editar
+                      </button>
+                      <button
+                        class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 flex items-center"
+                        on:click|stopPropagation={(e) => handleDelete(project.id, e)}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Eliminar
+                      </button>
+                    </div>
+                  </div>
+                {/if}
+              </div>
             </div>
           </div>
         </div>

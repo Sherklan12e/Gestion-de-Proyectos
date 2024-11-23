@@ -11,6 +11,7 @@
   import Footer from './components/layouts/Footer.svelte';
   import ProjectDetail from './components/Projects/proyectoDetail.svelte';
   import TicketDetail from './components/Tickets/ticketDetail.svelte';
+  import EditProject from './components/Projects/EditProject.svelte';
   export let url = "";
 </script>
 
@@ -37,6 +38,9 @@
     <Route path="/admins" component={Admins} />
     <Route path="/projects/:id" component={ProjectDetail} />
     <Route path="/tickets/:id" component={TicketDetail} />
+    <Route path="/editProject/:id" let:params>
+      <EditProject projectId={params.id} />
+    </Route>
   </main>
   <Footer />
 </Router>
