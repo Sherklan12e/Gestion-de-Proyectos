@@ -106,8 +106,13 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 
 ## ✉️ Contacto
 
-Tu Nombre - [@tutwitter](https://twitter.com/tutwitter) - email@example.com
+Sherklan - [@](https://x.com/PatrikPE1) -click
 
 Link del Proyecto: [https://github.com/tu-usuario/Gestion-de-Proyectos](https://github.com/tu-usuario/Gestion-de-Proyectos)
 
+
+
+## Cosas que faltann aaa
+ 
+Que envie una salicitud al otro usuario para unirser al proyecto .
 
