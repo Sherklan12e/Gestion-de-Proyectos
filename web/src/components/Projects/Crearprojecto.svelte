@@ -1,18 +1,56 @@
 <script>
+  import { onMount } from 'svelte';
+  
   let projectData = {
-    name: '',
-    description: '',
-    startDate: '',
-    endDate: '',
-    status: 'planning',
-    team: []
+    nombre: '',
+    descripcion: '',
+    creacionUsuario: ''
   };
+
+  let loggedInEmail = '';
+  
+  onMount(async () => {
+    // Obtener email del usuario logueado desde la cache
+    const cachedUser = JSON.parse(localStorage.getItem('auth'));
+    
+    if (cachedUser?.user?.email) {
+      loggedInEmail = cachedUser.user.email;
+      
+      // Obtener lista de usuarios y buscar el ID correspondiente
+      try {
+        const response = await fetch('http://localhost:5180/api');
+        const users = await response.json();
+        
+        const matchingUser = users.find(user => user.email === loggedInEmail);
+        if (matchingUser) {
+          projectData.creacionUsuario = matchingUser.id;
+          console.log('Usuario encontrado:', matchingUser);
+        }
+        console.log('Usuario encontrado:', matchingUser);
+      } catch (error) {
+        console.error('Error al obtener usuarios:', error);
+      }
+    }
+  });
 
   async function handleCreateProject(e) {
     e.preventDefault();
     try {
-      // Implementa la creación del proyecto
-      console.log('Creando proyecto:', projectData);
+      const response = await fetch('http://localhost:5180/api/proyecto', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(projectData)
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al crear el proyecto');
+      }
+
+      const result = await response.json();
+      console.log('Proyecto creado:', result);
+      
     } catch (error) {
       console.error('Error al crear proyecto:', error);
     }
@@ -28,7 +66,7 @@
         <label class="block text-sm font-medium text-gray-700">Nombre del Proyecto</label>
         <input
           type="text"
-          bind:value={projectData.name}
+          bind:value={projectData.nombre}
           required
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         />
@@ -37,42 +75,10 @@
       <div>
         <label class="block text-sm font-medium text-gray-700">Descripción</label>
         <textarea
-          bind:value={projectData.description}
+          bind:value={projectData.descripcion}
           rows="4"
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
         ></textarea>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Fecha de Inicio</label>
-          <input
-            type="date"
-            bind:value={projectData.startDate}
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Fecha de Finalización</label>
-          <input
-            type="date"
-            bind:value={projectData.endDate}
-            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-          />
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Estado</label>
-        <select
-          bind:value={projectData.status}
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-        >
-          <option value="planning">Planificación</option>
-          <option value="in-progress">En Progreso</option>
-          <option value="completed">Completado</option>
-        </select>
       </div>
 
       <button
