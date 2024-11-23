@@ -15,7 +15,7 @@ public interface ITicketService
     void DeleteTicket(Guid idTicket);
     void ActualizarEstadoTicket(Guid idTicket, string nuevoEstado);
 
-    // TicketQueryDto TraerTicket(Guid Tr)s
+    TicketQueryDto TraerTicket(Guid idTicket);
 }
 
 public class TicketService : ITicketService
@@ -188,5 +188,38 @@ public class TicketService : ITicketService
 
         ticket.Estado = nuevoEstado;
         context.SaveChanges();
+    }
+
+    public TicketQueryDto TraerTicket(Guid idTicket)
+    {
+        var ticket = context.Tickets
+            .Include(t => t.Actividad)
+            .FirstOrDefault(t => t.Id == idTicket);
+
+        if (ticket == null)
+        {
+            throw new KeyNotFoundException("Ticket No encontrado");
+        }
+
+        return new TicketQueryDto
+        {
+            Id = ticket.Id,
+            Usuario = ticket.CreacionUsuario,
+            ProyectoId = ticket.Proyecto,
+            Nombre = ticket.Nombre,
+            Descripcion = ticket.Descripcion,
+            Estado = ticket.Estado,
+            FechaCreacion = ticket.FechaCreacion,
+            FechaInicio = ticket.FechaInicio,
+            FechaFin = ticket.FechaFin,
+            Actividad = ticket.Actividad.Select(c => new ComentarioQueryDto
+            {
+                Id = c.Id,
+                Contenido = c.Contenido,
+                CreacionUsuario = c.Usuario,
+                FechaCreacion = c.FechaCreacion,
+                TicketId = c.Ticket
+            }).ToList()
+        };
     }
 }

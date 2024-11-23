@@ -10,7 +10,7 @@ public class TicketQueryDto : TicketCommandDto
     public DateTime? FechaInicio { get; set; }
     public DateTime? FechaFin { get; set; }
     public Guid Usuario { get; set; }
-    public List<ComentarioQueryDto> Actividad { get; set; } = [];
+    public List<ComentarioQueryDto>? Actividad { get; set; } = [];
 }
 
 public class TicketCommandDto

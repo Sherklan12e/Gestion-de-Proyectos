@@ -37,7 +37,9 @@ builder.Services.AddCors(options =>
 var options = new DbContextOptionsBuilder<GestionTareasDbContext>();
 options.UseMySql(connectionString, new MySqlServerVersion("8.0.39"));
 var context = new GestionTareasDbContext(options.Options);
+
 context.Database.Migrate();
+
 
 var app = builder.Build();
 

@@ -13,6 +13,20 @@ public static class TicketEndpoints
             return Results.Ok(tickets);
         });
 
+        app.MapGet("/tickets/{idTicket}" ,([FromServices] ITicketService  ticketService , Guid idTicket) => 
+        {
+            try{
+
+                var ticket = ticketService.TraerTicket(idTicket);
+                return Results.Ok(ticket);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(ex.Message);
+            }
+            
+        });
+
         app.MapPost("/ticket", ([FromServices] ITicketService ticketService, TicketCommandDto ticketDto) =>
         {
             ticketService.CrearTicket(ticketDto);
