@@ -10,15 +10,37 @@
 
   let loggedInEmail = '';
   
-  let showEmojiPicker = false;
+  let showEmojiPickerTitle = false;
+  let showEmojiPickerDesc = false;
   
-  function toggleEmojiPicker() {
-    showEmojiPicker = !showEmojiPicker;
+  const MAX_CHARS_DESC = 50;  // Máximo de caracteres permitidos para descripción
+  const MIN_CHARS_DESC = 20;  // Mínimo de caracteres requeridos para descripción
+  const MAX_CHARS_NAME = 40;  // Máximo de caracteres permitidos para nombre
+  let charactersRemaining = MAX_CHARS_DESC;
+
+  function toggleEmojiPickerTitle() {
+    showEmojiPickerTitle = !showEmojiPickerTitle;
+    showEmojiPickerDesc = false;
   }
 
-  function onEmojiSelect(e) {
+  function toggleEmojiPickerDesc() {
+    showEmojiPickerDesc = !showEmojiPickerDesc;
+    showEmojiPickerTitle = false;
+  }
+
+  function onEmojiSelectTitle(e) {
     projectData.nombre += e.detail.unicode;
-    showEmojiPicker = false;
+    showEmojiPickerTitle = false;
+  }
+
+  function onEmojiSelectDesc(e) {
+    projectData.descripcion += e.detail.unicode;
+    showEmojiPickerDesc = false;
+  }
+  
+  function updateCharCount(event) {
+    const length = event.target.value.length;
+    charactersRemaining = MAX_CHARS_DESC - length;
   }
   
   onMount(async () => {
@@ -93,21 +115,25 @@
             type="text"
             bind:value={projectData.nombre}
             required
+            maxlength={MAX_CHARS_NAME}
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
           />
           <button
             type="button"
             class="ml-2 p-2 text-gray-500 hover:text-gray-700"
-            on:click={toggleEmojiPicker}
+            on:click={toggleEmojiPickerTitle}
           >
             😊
           </button>
         </div>
+        <div class="text-sm text-gray-500">
+          <span>{projectData.nombre.length}/{MAX_CHARS_NAME} caracteres</span>
+        </div>
         
-        {#if showEmojiPicker}
+        {#if showEmojiPickerTitle}
           <div class="absolute z-10 mt-1">
             <emoji-picker
-              on:emoji-click={onEmojiSelect}
+              on:emoji-click={onEmojiSelectTitle}
             ></emoji-picker>
           </div>
         {/if}
@@ -115,11 +141,40 @@
 
       <div>
         <label class="block text-sm font-medium text-gray-700">Descripción</label>
-        <textarea
-          bind:value={projectData.descripcion}
-          rows="4"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
-        ></textarea>
+        <div class="flex items-start">
+          <textarea
+            bind:value={projectData.descripcion}
+            on:input={updateCharCount}
+            required
+            maxlength={MAX_CHARS_DESC}
+            minlength={MIN_CHARS_DESC}
+            rows="4"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+            placeholder="Describa el proyecto (mínimo 20 caracteres)"
+          ></textarea>
+          <button
+            type="button"
+            class="ml-2 p-2 text-gray-500 hover:text-gray-700"
+            on:click={toggleEmojiPickerDesc}
+          >
+            😊
+          </button>
+        </div>
+        
+        {#if showEmojiPickerDesc}
+          <div class="absolute z-10 mt-1">
+            <emoji-picker
+              on:emoji-click={onEmojiSelectDesc}
+            ></emoji-picker>
+          </div>
+        {/if}
+        
+        <div class="text-sm text-gray-500 flex justify-between">
+          <span>{projectData.descripcion.length}/{MAX_CHARS_DESC} caracteres</span>
+          {#if projectData.descripcion.length < MIN_CHARS_DESC}
+            <span class="text-red-500">Mínimo {MIN_CHARS_DESC} caracteres requeridos</span>
+          {/if}
+        </div>
       </div>
 
       <button

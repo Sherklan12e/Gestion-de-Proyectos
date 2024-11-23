@@ -18,14 +18,26 @@
   let charactersRemaining = MAX_CHARS_DESC;  // Contador de caracteres restantes
 
   let showEmojiPicker = false;
+  let showEmojiPickerDesc = false;
   
   function toggleEmojiPicker() {
     showEmojiPicker = !showEmojiPicker;
+    showEmojiPickerDesc = false;
   }
 
-  function onEmojiSelect(e) {
+  function toggleEmojiPickerDesc() {
+    showEmojiPickerDesc = !showEmojiPickerDesc;
+    showEmojiPicker = false;
+  }
+
+  function onEmojiSelectNombre(e) {
     projectData.nombre += e.detail.unicode;
     showEmojiPicker = false;
+  }
+
+  function onEmojiSelectDescripcion(e) {
+    projectData.descripcion += e.detail.unicode;
+    showEmojiPickerDesc = false;
   }
 
   onMount(async () => {
@@ -134,7 +146,7 @@
         {#if showEmojiPicker}
           <div class="absolute z-10 mt-1">
             <emoji-picker
-              on:emoji-click={onEmojiSelect}
+              on:emoji-click={onEmojiSelectNombre}
             ></emoji-picker>
           </div>
         {/if}
@@ -148,17 +160,35 @@
         <label for="descripcion" class="block text-sm font-medium text-gray-700">
           Descripción
         </label>
-        <textarea 
-          id="descripcion" 
-          bind:value={projectData.descripcion}
-          on:input={updateCharCount}
-          required
-          maxlength={MAX_CHARS_DESC}
-          minlength={MIN_CHARS_DESC}
-          rows="4"
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-          placeholder="Describa el proyecto (mínimo 20 caracteres)"
-        ></textarea>
+        <div class="flex items-start">
+          <textarea 
+            id="descripcion" 
+            bind:value={projectData.descripcion}
+            on:input={updateCharCount}
+            required
+            maxlength={MAX_CHARS_DESC}
+            minlength={MIN_CHARS_DESC}
+            rows="4"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+            placeholder="Describa el proyecto (mínimo 20 caracteres)"
+          ></textarea>
+          <button
+            type="button"
+            class="ml-2 p-2 text-gray-500 hover:text-gray-700"
+            on:click={toggleEmojiPickerDesc}
+          >
+            😊
+          </button>
+        </div>
+        
+        {#if showEmojiPickerDesc}
+          <div class="absolute z-10 mt-1">
+            <emoji-picker
+              on:emoji-click={onEmojiSelectDescripcion}
+            ></emoji-picker>
+          </div>
+        {/if}
+        
         <div class="text-sm text-gray-500 flex justify-between">
           <span>{projectData.descripcion.length}/{MAX_CHARS_DESC} caracteres</span>
           {#if projectData.descripcion.length < MIN_CHARS_DESC}
