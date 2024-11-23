@@ -45,10 +45,32 @@
     window.addEventListener('click', handleClickOutside);
   }
 
-  function handleDelete(id, event) {
+  async function handleDelete(id, event) {
     event.stopPropagation();
-    // Implementar lógica de eliminación
-    console.log('Eliminar proyecto:', id);
+    
+    if (confirm('¿Estás seguro de que deseas eliminar este proyecto?')) {
+      try {
+        const response = await fetch(`http://localhost:5180/api/proyecto/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al eliminar el proyecto');
+        }
+
+        // Actualizar la lista de proyectos eliminando el proyecto
+        projects = projects.filter(project => project.id !== id);
+        
+        // Cerrar el dropdown
+        activeDropdown = null;
+      } catch (err) {
+        console.error('Error:', err);
+        alert('No se pudo eliminar el proyecto');
+      }
+    }
   }
 </script>
 
