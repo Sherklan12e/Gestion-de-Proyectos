@@ -27,7 +27,7 @@ public class Ticket : Auditoria
    
     public DateTime? FechaFin { get; set; }
     
-    [ForeignKey("IdTicket")]
+    [ForeignKey("Ticket")]
     public List<Comentario> Actividad { get; set; } = [];
 
 

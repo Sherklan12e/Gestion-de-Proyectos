@@ -21,6 +21,7 @@ public class Usuario : Auditoria
     [ForeignKey("IdUsuario")]
     public List<Proyecto>? ProyectoAsignados {get; set;} = [];
    
+    [ForeignKey("Usuario")]
     public List<Comentario>? ComentariosUsuario {get; set;} = [];
     public List<Ticket>? TicketsAsignados {get; set;} = [];
     

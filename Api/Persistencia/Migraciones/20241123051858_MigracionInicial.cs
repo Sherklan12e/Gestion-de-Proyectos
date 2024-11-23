@@ -122,10 +122,8 @@ namespace Api.Persistencia.Migraciones
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Ticket = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Usuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Contenido = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                    Contenido = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    IdTicket = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
-                    UsuarioId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
                     CreacionUsuario = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     FechaCreacion = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -133,15 +131,17 @@ namespace Api.Persistencia.Migraciones
                 {
                     table.PrimaryKey("PK_Comentario", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comentario_Ticket_IdTicket",
-                        column: x => x.IdTicket,
+                        name: "FK_Comentario_Ticket_Ticket",
+                        column: x => x.Ticket,
                         principalTable: "Ticket",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comentario_Usuario_UsuarioId",
-                        column: x => x.UsuarioId,
+                        name: "FK_Comentario_Usuario_Usuario",
+                        column: x => x.Usuario,
                         principalTable: "Usuario",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -150,19 +150,19 @@ namespace Api.Persistencia.Migraciones
                 columns: new[] { "Id", "CreacionUsuario", "Email", "FechaCreacion", "Nombre", "Password" },
                 values: new object[,]
                 {
-                    { new Guid("4aa9ef3e-5912-4cc8-bf0d-5d611e09c050"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 21, 23, 2, 49, 419, DateTimeKind.Local).AddTicks(782), "juan", "$2a$11$fMTNbZFO34/kLYo9J3798OIGybybfUEktufpi4R7bPjPAKuxVCRrG" },
-                    { new Guid("e4aa9dea-51b3-41a0-bae6-0265c211d8a8"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 21, 23, 2, 49, 579, DateTimeKind.Local).AddTicks(7157), "leon", "$2a$11$zYIYE.IVAjLDjsni3iLnd.8aaljjK8NZ8jGrDahw5mUVVb9M2t/22" }
+                    { new Guid("1b035f47-e22b-4f37-bc95-bfae48a92ea8"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 23, 2, 18, 57, 863, DateTimeKind.Local).AddTicks(3384), "juan", "$2a$11$nzPZ/IYqP98u0URMDrlrIearvJaVGI.JDj9cyBheYrlaTH1l8l/Jq" },
+                    { new Guid("2eb5b11b-bd38-480d-9d0d-2a5f3f9e3963"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 23, 2, 18, 58, 70, DateTimeKind.Local).AddTicks(910), "leon", "$2a$11$Tfm55MxQX3IgLiLWA/JmPum3S58mpsYfCncrGluRSuEMc3haI.ig2" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comentario_IdTicket",
+                name: "IX_Comentario_Ticket",
                 table: "Comentario",
-                column: "IdTicket");
+                column: "Ticket");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comentario_UsuarioId",
+                name: "IX_Comentario_Usuario",
                 table: "Comentario",
-                column: "UsuarioId");
+                column: "Usuario");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProyectoUsuario_IdUsuario",

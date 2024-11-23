@@ -12,11 +12,10 @@
   onMount(async () => {
     // Obtener email del usuario logueado desde la cache
     const cachedUser = JSON.parse(localStorage.getItem('auth'));
-    
+    console.log(cachedUser);
     if (cachedUser?.user?.email) {
       loggedInEmail = cachedUser.user.email;
-      
-      // Obtener lista de usuarios y buscar el ID correspondiente
+    
       try {
         const response = await fetch('http://localhost:5180/api');
         const users = await response.json();
@@ -57,6 +56,12 @@
       
       // Redirigir a la página de proyectos
       window.location.href = '/projects';
+      // Opcional: Limpiar el formulario después de crear
+      projectData = {
+        nombre: '',
+        descripcion: '',
+        creacionUsuario: projectData.creacionUsuario // Mantener el usuario
+      };
       
     } catch (error) {
       console.error('Error al crear proyecto:', error);

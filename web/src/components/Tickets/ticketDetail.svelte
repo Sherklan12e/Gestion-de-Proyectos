@@ -150,13 +150,13 @@
               {/if}
             </div>
           </div>
-  
+          {console.log(ticket)}
           <!-- Comentarios si los hay -->
-          {#if ticket.comentarios && ticket.comentarios.length > 0}
+          {#if ticket.actividad && ticket.actividad.length > 0}
             <div class="mt-8">
               <h2 class="text-lg font-medium mb-4">Comentarios</h2>
               <div class="space-y-4">
-                {#each ticket.comentarios as comentario}
+                {#each ticket.actividad as comentario}
                   <div class="bg-gray-50 p-4 rounded-lg">
                     <div class="flex justify-between items-start">
                       <div>

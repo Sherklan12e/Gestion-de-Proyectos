@@ -34,7 +34,7 @@ public class ComentarioService : IComentarioService
                 Id = c.Id,
                 Contenido = c.Contenido,
                 FechaCreacion = c.FechaCreacion,
-                CreacionUsuario = c.CreacionUsuario,
+                CreacionUsuario = c.Usuario,
                 TicketId = c.Ticket
             }).ToList();
     }
@@ -46,11 +46,26 @@ public class ComentarioService : IComentarioService
         Guard.ValidarGuid(comentarioDto.CreacionUsuario, "ID de usuario creador");
         Guard.ValidarGuid(comentarioDto.TicketId, "ID de ticket");
 
+        // Verificar que el ticket existe
+        var ticketExiste = _context.Tickets.Any(t => t.Id == comentarioDto.TicketId);
+        if (!ticketExiste)
+        {
+            throw new KeyNotFoundException($"No se encontró el ticket con ID {comentarioDto.TicketId}");
+        }
+
+        // Verificar que el usuario existe
+        var usuarioExiste = _context.Usuarios.Any(u => u.Id == comentarioDto.CreacionUsuario);
+        if (!usuarioExiste)
+        {
+            throw new KeyNotFoundException($"No se encontró el usuario con ID {comentarioDto.CreacionUsuario}");
+        }
+
         var comentario = new Comentario
         {
             Contenido = comentarioDto.Contenido,
-            CreacionUsuario = comentarioDto.CreacionUsuario,
+            Usuario = comentarioDto.CreacionUsuario,
             Ticket = comentarioDto.TicketId,
+            CreacionUsuario = comentarioDto.CreacionUsuario,
             FechaCreacion = DateTime.Now
         };
 

@@ -31,7 +31,6 @@ public class TicketService : ITicketService
     public List<TicketQueryDto> ObtenerTickets()
     {
         return context.Tickets
-            .Include(t => t.Actividad)
             .Select(t => new TicketQueryDto
             {
                 Id = t.Id,
@@ -41,16 +40,19 @@ public class TicketService : ITicketService
                 Usuario = t.Usuario,
                 UsuarioAsignadoId = t.Usuario,
                 ProyectoId = t.Proyecto,
-                FechaInicio = t.Estado.ToLower() == "abierto" ? null :  t.FechaInicio,
-                FechaFin = (t.Estado.ToLower() == "cerrado" || t.Estado.ToLower() == "completado" ) ? t.FechaFin : null,
+                FechaInicio = t.Estado.ToLower() == "abierto" ? null : t.FechaInicio,
+                FechaFin = (t.Estado.ToLower() == "cerrado" || t.Estado.ToLower() == "completado") ? t.FechaFin : null,
                 FechaCreacion = t.FechaCreacion,
-                Actividad = t.Actividad.Select(c => new ComentarioQueryDto
-                {
-                    Id = c.Id,
-                    Contenido = c.Contenido,
-                    CreacionUsuario = c.Usuario,
-                    TicketId = c.Ticket
-                }).ToList(),
+                Actividad = context.Comentarios
+                    .Where(c => c.Ticket == t.Id)
+                    .Select(c => new ComentarioQueryDto
+                    {
+                        Id = c.Id,
+                        Contenido = c.Contenido,
+                        CreacionUsuario = c.Usuario,
+                        FechaCreacion = c.FechaCreacion,
+                        TicketId = c.Ticket
+                    }).ToList()
             }).ToList();
     }
 
@@ -201,10 +203,22 @@ public class TicketService : ITicketService
             throw new KeyNotFoundException("Ticket No encontrado");
         }
 
+        // Obtener los comentarios con sus usuarios relacionados
+        var comentarios = context.Comentarios
+            .Where(c => c.Ticket == ticket.Id)
+            .Select(c => new ComentarioQueryDto
+            {
+                Id = c.Id,
+                Contenido = c.Contenido,
+                CreacionUsuario = c.Usuario,
+                FechaCreacion = c.FechaCreacion,
+                TicketId = c.Ticket
+            }).ToList();
+
         return new TicketQueryDto
         {
             Id = ticket.Id,
-            Usuario = ticket.CreacionUsuario,
+            Usuario = ticket.Usuario,
             ProyectoId = ticket.Proyecto,
             Nombre = ticket.Nombre,
             Descripcion = ticket.Descripcion,
@@ -212,14 +226,7 @@ public class TicketService : ITicketService
             FechaCreacion = ticket.FechaCreacion,
             FechaInicio = ticket.FechaInicio,
             FechaFin = ticket.FechaFin,
-            Actividad = ticket.Actividad.Select(c => new ComentarioQueryDto
-            {
-                Id = c.Id,
-                Contenido = c.Contenido,
-                CreacionUsuario = c.Usuario,
-                FechaCreacion = c.FechaCreacion,
-                TicketId = c.Ticket
-            }).ToList()
+            Actividad = comentarios
         };
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Api.Persistencia.Migraciones
 {
     [DbContext(typeof(GestionTareasDbContext))]
-    [Migration("20241122020250_MigracionInicial")]
+    [Migration("20241123051858_MigracionInicial")]
     partial class MigracionInicial
     {
         /// <inheritdoc />
@@ -48,8 +48,8 @@ namespace Api.Persistencia.Migraciones
 
                     b.Property<string>("Contenido")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.Property<Guid>("CreacionUsuario")
                         .HasColumnType("char(36)");
@@ -57,23 +57,17 @@ namespace Api.Persistencia.Migraciones
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("IdTicket")
-                        .HasColumnType("char(36)");
-
                     b.Property<Guid>("Ticket")
                         .HasColumnType("char(36)");
 
                     b.Property<Guid>("Usuario")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("UsuarioId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("IdTicket");
+                    b.HasIndex("Ticket");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("Usuario");
 
                     b.ToTable("Comentario");
                 });
@@ -192,21 +186,21 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4aa9ef3e-5912-4cc8-bf0d-5d611e09c050"),
+                            Id = new Guid("1b035f47-e22b-4f37-bc95-bfae48a92ea8"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 21, 23, 2, 49, 419, DateTimeKind.Local).AddTicks(782),
+                            FechaCreacion = new DateTime(2024, 11, 23, 2, 18, 57, 863, DateTimeKind.Local).AddTicks(3384),
                             Nombre = "juan",
-                            Password = "$2a$11$fMTNbZFO34/kLYo9J3798OIGybybfUEktufpi4R7bPjPAKuxVCRrG"
+                            Password = "$2a$11$nzPZ/IYqP98u0URMDrlrIearvJaVGI.JDj9cyBheYrlaTH1l8l/Jq"
                         },
                         new
                         {
-                            Id = new Guid("e4aa9dea-51b3-41a0-bae6-0265c211d8a8"),
+                            Id = new Guid("2eb5b11b-bd38-480d-9d0d-2a5f3f9e3963"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 21, 23, 2, 49, 579, DateTimeKind.Local).AddTicks(7157),
+                            FechaCreacion = new DateTime(2024, 11, 23, 2, 18, 58, 70, DateTimeKind.Local).AddTicks(910),
                             Nombre = "leon",
-                            Password = "$2a$11$zYIYE.IVAjLDjsni3iLnd.8aaljjK8NZ8jGrDahw5mUVVb9M2t/22"
+                            Password = "$2a$11$Tfm55MxQX3IgLiLWA/JmPum3S58mpsYfCncrGluRSuEMc3haI.ig2"
                         });
                 });
 
@@ -229,11 +223,15 @@ namespace Api.Persistencia.Migraciones
                 {
                     b.HasOne("biblioteca.Dominio.Ticket", null)
                         .WithMany("Actividad")
-                        .HasForeignKey("IdTicket");
+                        .HasForeignKey("Ticket")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("biblioteca.Dominio.Usuario", null)
                         .WithMany("ComentariosUsuario")
-                        .HasForeignKey("UsuarioId");
+                        .HasForeignKey("Usuario")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("biblioteca.Dominio.Ticket", b =>
