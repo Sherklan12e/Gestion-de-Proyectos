@@ -15,6 +15,17 @@
     proyectoId: ''
   };
 
+  // Estado para el modal de agregar usuario
+  let showAddUserModal = false;
+  let searchTerm = '';
+  let searchResults = [];
+
+  let showAllUsers = false;
+  const USERS_LIMIT = 8;
+
+  $: visibleUsers = showAllUsers ? project?.usuarios : project?.usuarios?.slice(0, USERS_LIMIT);
+  $: hasMoreUsers = project?.usuarios?.length > USERS_LIMIT;
+
   onMount(async () => {
     try {
       const response = await fetch(`http://localhost:5180/api/proyectos/${projectId}`);
@@ -67,6 +78,39 @@
       console.error('Error:', err);
     }
   }
+
+  async function searchUsers() {
+    try {
+      const response = await fetch('http://localhost:5180/api');
+      const users = await response.json();
+      searchResults = users.filter(user => 
+        user.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        !project.usuarios.some(u => u.id === user.id)
+      );
+    } catch (error) {
+      console.error('Error al buscar usuarios:', error);
+    }
+  }
+
+  async function addUserToProject(userId) {
+    try {
+      const response = await fetch(`http://localhost:5180/api/proyectos/${project.id}/usuario/${userId}`, {
+        method: 'POST'
+      });
+
+      if (!response.ok) throw new Error('Error al agregar usuario');
+
+      // Recargar los datos del proyecto
+      const projectResponse = await fetch(`http://localhost:5180/api/proyectos/${project.id}`);
+      project = await projectResponse.json();
+      
+      showAddUserModal = false;
+      searchTerm = '';
+      searchResults = [];
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 </script>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -87,28 +131,54 @@
           <h1 class="text-3xl font-bold text-gray-900">{project.nombre}</h1>
           <p class="mt-2 text-gray-600">{project.descripcion}</p>
         </div>
-        <button
-          class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-          on:click={() => showNewTicketModal = true}
-        >
-          Nuevo Ticket
-        </button>
+        <div class="flex space-x-4">
+          <button
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            on:click={() => showNewTicketModal = true}
+          >
+            Nuevo Ticket
+          </button>
+          <button
+            class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
+            on:click={() => showAddUserModal = true}
+          >
+            Agregar Usuario
+          </button>
+        </div>
       </div>
       
       <!-- Información del Proyecto -->
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Equipo -->
         <div class="bg-white p-6 rounded-lg shadow">
-          <h2 class="text-xl font-semibold mb-4">Equipo</h2>
-          <div class="space-y-3">
-            {#each project.usuarios as usuario}
-              <div class="flex items-center space-x-3">
-                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold">Equipo</h2>
+            {#if hasMoreUsers}
+              <button 
+                class="text-blue-600 hover:text-blue-800 flex items-center space-x-1"
+                on:click={() => showAllUsers = !showAllUsers}
+              >
+                <span>{showAllUsers ? 'Ver menos' : 'Ver más'}</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  {#if showAllUsers}
+                    <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"/>
+                  {:else}
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                  {/if}
+                </svg>
+              </button>
+            {/if}
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {#each visibleUsers as usuario}
+              <div class="flex flex-col items-center p-4 border rounded-lg hover:shadow-md transition-shadow">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center text-white text-xl font-bold mb-2">
                   {usuario.nombre[0].toUpperCase()}
                 </div>
-                <div>
-                  <p class="font-medium">{usuario.nombre}</p>
-                  <p class="text-sm text-gray-500">{usuario.email}</p>
+                <div class="text-center">
+                  <p class="font-medium truncate w-full">{usuario.nombre}</p>
+                  <p class="text-sm text-gray-500 truncate w-full">{usuario.email}</p>
                 </div>
               </div>
             {/each}
@@ -234,6 +304,61 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Modal Agregar Usuario -->
+  {#if showAddUserModal}
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white rounded-lg p-6 w-full max-w-md">
+        <h2 class="text-xl font-semibold mb-4">Agregar Usuario al Proyecto</h2>
+        
+        <div class="mb-4">
+          <input
+            type="text"
+            placeholder="Buscar usuario por nombre..."
+            bind:value={searchTerm}
+            on:input={searchUsers}
+            class="w-full px-3 py-2 border rounded-md"
+          />
+        </div>
+
+        <div class="max-h-60 overflow-y-auto">
+          {#if searchResults.length > 0}
+            <ul class="divide-y divide-gray-200">
+              {#each searchResults as user}
+                <li class="py-3 flex justify-between items-center">
+                  <div>
+                    <p class="font-medium">{user.nombre}</p>
+                    <p class="text-sm text-gray-500">{user.email}</p>
+                  </div>
+                  <button
+                    class="bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700"
+                    on:click={() => addUserToProject(user.id)}
+                  >
+                    Agregar
+                  </button>
+                </li>
+              {/each}
+            </ul>
+          {:else if searchTerm}
+            <p class="text-center text-gray-500 py-4">No se encontraron usuarios</p>
+          {/if}
+        </div>
+
+        <div class="mt-4 flex justify-end">
+          <button
+            class="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
+            on:click={() => {
+              showAddUserModal = false;
+              searchTerm = '';
+              searchResults = [];
+            }}
+          >
+            Cerrar
+          </button>
+        </div>
       </div>
     </div>
   {/if}
