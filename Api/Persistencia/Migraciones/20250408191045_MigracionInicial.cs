@@ -150,8 +150,8 @@ namespace Api.Persistencia.Migraciones
                 columns: new[] { "Id", "CreacionUsuario", "Email", "FechaCreacion", "Nombre", "Password" },
                 values: new object[,]
                 {
-                    { new Guid("1b035f47-e22b-4f37-bc95-bfae48a92ea8"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2024, 11, 23, 2, 18, 57, 863, DateTimeKind.Local).AddTicks(3384), "juan", "$2a$11$nzPZ/IYqP98u0URMDrlrIearvJaVGI.JDj9cyBheYrlaTH1l8l/Jq" },
-                    { new Guid("2eb5b11b-bd38-480d-9d0d-2a5f3f9e3963"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2024, 11, 23, 2, 18, 58, 70, DateTimeKind.Local).AddTicks(910), "leon", "$2a$11$Tfm55MxQX3IgLiLWA/JmPum3S58mpsYfCncrGluRSuEMc3haI.ig2" }
+                    { new Guid("3011a4dd-c769-4f6b-bf4a-a6959a72aaf7"), new Guid("00000000-0000-0000-0000-000000000000"), "juan@gmail.com", new DateTime(2025, 4, 8, 16, 10, 44, 782, DateTimeKind.Local).AddTicks(8518), "juan", "$2a$11$mIJCy.NyrbN5ls8P/ZLKLOddlVNNR0HemT7Mi4auuKjd.JO4vWMEO" },
+                    { new Guid("a0f95921-00be-41d7-bbc7-f391ae32e207"), new Guid("00000000-0000-0000-0000-000000000000"), "leon@gmail.com", new DateTime(2025, 4, 8, 16, 10, 44, 917, DateTimeKind.Local).AddTicks(5217), "leon", "$2a$11$ou5PEjwnGPkBrHhnfYYPlebLurB3VfsClYUGm.yTlfenwU6zq6D9." }
                 });
 
             migrationBuilder.CreateIndex(

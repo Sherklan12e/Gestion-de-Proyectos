@@ -17,7 +17,7 @@ namespace Api.Persistencia.Migraciones
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.13")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
@@ -183,21 +183,21 @@ namespace Api.Persistencia.Migraciones
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1b035f47-e22b-4f37-bc95-bfae48a92ea8"),
+                            Id = new Guid("3011a4dd-c769-4f6b-bf4a-a6959a72aaf7"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "juan@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 23, 2, 18, 57, 863, DateTimeKind.Local).AddTicks(3384),
+                            FechaCreacion = new DateTime(2025, 4, 8, 16, 10, 44, 782, DateTimeKind.Local).AddTicks(8518),
                             Nombre = "juan",
-                            Password = "$2a$11$nzPZ/IYqP98u0URMDrlrIearvJaVGI.JDj9cyBheYrlaTH1l8l/Jq"
+                            Password = "$2a$11$mIJCy.NyrbN5ls8P/ZLKLOddlVNNR0HemT7Mi4auuKjd.JO4vWMEO"
                         },
                         new
                         {
-                            Id = new Guid("2eb5b11b-bd38-480d-9d0d-2a5f3f9e3963"),
+                            Id = new Guid("a0f95921-00be-41d7-bbc7-f391ae32e207"),
                             CreacionUsuario = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "leon@gmail.com",
-                            FechaCreacion = new DateTime(2024, 11, 23, 2, 18, 58, 70, DateTimeKind.Local).AddTicks(910),
+                            FechaCreacion = new DateTime(2025, 4, 8, 16, 10, 44, 917, DateTimeKind.Local).AddTicks(5217),
                             Nombre = "leon",
-                            Password = "$2a$11$Tfm55MxQX3IgLiLWA/JmPum3S58mpsYfCncrGluRSuEMc3haI.ig2"
+                            Password = "$2a$11$ou5PEjwnGPkBrHhnfYYPlebLurB3VfsClYUGm.yTlfenwU6zq6D9."
                         });
                 });
 

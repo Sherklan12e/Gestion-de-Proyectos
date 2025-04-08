@@ -62,10 +62,13 @@ git clone https://github.com/tu-usuario/tu-repositorio.git
     "DefaultConnection": "Server=localhost;Database=tu_base_de_datos;Uid=tu_usuario;Pwd=tu_contraseña;"
 }
 ````
-
-3. Ejecutar las migraciones
+3. Ejecutar en la carpeta Api
 ```bash
-dotnet ef migrations add MigracionInicial --context GestionTareasDbContext --output-dir Persistencia/Migraciones --project Api --startup-project Api
+dotnet build
+```
+3. Ejecutar en la carpeta Api
+```bash
+dotnet ef migrations add MigracionInicial --context GestionTareasDbContext --output-dir Persistencia/Migraciones
 ```
 4. Iniciar el proyecto
 ```bash
